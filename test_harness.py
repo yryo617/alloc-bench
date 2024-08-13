@@ -357,7 +357,7 @@ class CommandLine:
                               description = prog[1] if prog[1] is not  None else 
                                                 f"This test harness builds bdwgc for the requisite -march. "
                                                 f"Each benchmark is linked with cheri-bdwgc library and installed in "
-                                                f"the --wordir directory. The installation can optionaly "
+                                                f"the --workdir directory. The installation can optionally "
                                                 f"build the cheribuild toolchain, download the bdwgc code and the benchmarks "
                                                 f"execute and collate all the results in an output json file. "
                                                 f"It will also optionally plot the graphs as pdf files",
