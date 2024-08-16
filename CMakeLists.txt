@@ -20,7 +20,7 @@ if (${gclib} STREQUAL bdwgc)
         -DCMAKE_INSTALL_PREFIX=${CMAKE_CURRENT_BINARY_DIR}/bdwgc
         -Denable_gcj_support=OFF 
         -Denable_parallel_mark=OFF 
-        -Denable_threads=ON
+	-Denable_threads=OFF
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
     set(bdwgc_build_prefix ${CMAKE_CURRENT_BINARY_DIR}/bdwgc)
 
@@ -135,7 +135,7 @@ add_subdirectory(cfrac)
 add_subdirectory(espresso) 
 add_subdirectory(richards) 
 add_subdirectory(simple_alloc) 
-add_subdirectory(glibc-bench) 
+#add_subdirectory(glibc-bench) 
 add_subdirectory(binary-tree-profiling) ## TODO this
 if ( NOT ${gclib} STREQUAL bdwgc)
     add_subdirectory(mstress) 
