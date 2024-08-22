@@ -10,6 +10,7 @@ typedef struct __BM_HARNESS_DATA__
   char *bm; 
   float retention_ratio;
   unsigned int gc_cycles;
+  unsigned int gc_marktime_ms;
   unsigned int gc_time_ms;
 } BM_Harness; 
 

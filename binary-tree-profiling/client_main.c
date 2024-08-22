@@ -12,7 +12,7 @@ extern Command_Line g_cmdline;
 int bench_main(int argc, char *argv[])
 #else
 int main(int argc, char *argv[])
-#endif  
+#endif
 {
   int retval = 0;
   retval = parse_opts(argc, argv, default_cmdline(&g_cmdline)); 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
       goto err_main;
     }
   } else {
-    retval = binary_tree_benchmark(&g_cmdline); 
+    retval = binary_tree_benchmark(&g_cmdline);
   }
 
 err_main: 

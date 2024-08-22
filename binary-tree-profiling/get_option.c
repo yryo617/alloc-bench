@@ -130,7 +130,7 @@ int parse_opts(int argc, char *argv[], Command_Line *cmdline)
   char *short_options, *nptr;
 
   short_options = genstring(g_long_options, sizeof(g_long_options)/ sizeof(struct option)); 
-  uinfo("short option strings = %s", short_options);
+  /*udebug("short option strings = %s", short_options); */
 
   while ((short_opt = getopt_long(argc, argv, 
                          short_options, g_long_options, NULL)) != -1) {
@@ -145,9 +145,9 @@ int parse_opts(int argc, char *argv[], Command_Line *cmdline)
         goto err_parse_opts; 
       case 'v': 
         if (optarg) { 
-          udebug("Option -%c recevied argument --> %s, optind = %u", short_opt, optarg, optind); 
           if (!strncmp(optarg, "debug", 5)) { 
             cmdline->verbosity = Verbosity_Debug;
+            udebug("Option -%c recevied argument --> %s, optind = %u", short_opt, optarg, optind);
           } else if (!strncmp(optarg, "info", 4)) { 
             cmdline->verbosity = Verbosity_Info;
           } else if (!strncmp(optarg, "error", 5)) { 
@@ -171,7 +171,7 @@ int parse_opts(int argc, char *argv[], Command_Line *cmdline)
           retval = -1;
           goto err_parse_opts; 
 	}
-        udebug("Option -m parsed argument --> %lu (0x%08lx)", cmdline->max_tree_depth, cmdline->max_tree_depth); 
+        udebug("Option -m parsed argument --> %lu (0x%08lx)", cmdline->max_tree_depth, cmdline->max_tree_depth);
         break;
       case 'i': 
 	cmdline->num_iter = strtoul(optarg, &nptr, 0);
@@ -180,7 +180,7 @@ int parse_opts(int argc, char *argv[], Command_Line *cmdline)
           retval = -1;
           goto err_parse_opts; 
 	}
-        udebug("Option -i parsed argument --> %lu (0x%08lx)", cmdline->num_iter, cmdline->num_iter); 
+        udebug("Option -i parsed argument --> %lu (0x%08lx)", cmdline->num_iter, cmdline->num_iter);
 	if (cmdline->num_iter > MAX_ITERATIONS) { 
 	  uerror("Number of iterations should be less than %u", MAX_ITERATIONS);
           retval = -1;

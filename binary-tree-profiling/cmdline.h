@@ -52,6 +52,6 @@ typedef struct Command_Line {
 #define MAX_FILEPATH_LEN 4096
 
 
-int parse_opts(int , char **argv, Command_Line *);
+int parse_opts(int , char **, Command_Line *);
 Command_Line * default_cmdline( Command_Line *); 
 void free_global_config(Command_Line *);  

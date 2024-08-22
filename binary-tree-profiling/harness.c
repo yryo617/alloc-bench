@@ -20,6 +20,7 @@ int bmlog(BM_Harness *bmdata)
   fprintf(fp, "{\n");
   fprintf(fp, "  \"%s\" : \"%s\" ,\n", "bm", bmdata->bm );
   fprintf(fp, "  \"%s\" : %u ,\n", "gc_cycles", bmdata->gc_cycles );
+  fprintf(fp, "  \"%s\" : %u\n", "gc_marktime_ms", bmdata->gc_marktime_ms );
   fprintf(fp, "  \"%s\" : %u\n", "gc_time_ms", bmdata->gc_time_ms );
   fprintf(fp, "  \"%s\" : %f\n", "retention-ratio", bmdata->retention_ratio );
   fprintf(fp, "}\n");
