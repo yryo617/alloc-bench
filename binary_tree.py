@@ -379,7 +379,7 @@ class Build:
                     results[self.cmd.arch][bm_p][bm_id]["gc-time"]
                     / results[self.cmd.arch][bm_p][bm_id]["total-time"]
                 )
-                self.normal(results, bm_id, "total-time")
+                self.normal(results, bm_p, bm_id, "total-time")
 
             self.normal(results, bm_p, bm_id, "gc-cycles")
             self.normal(results, bm_p, bm_id, "gc-time")
