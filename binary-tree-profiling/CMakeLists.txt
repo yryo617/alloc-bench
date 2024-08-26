@@ -9,7 +9,7 @@ set(binary_tree_profiling_sources
 if (DEFINED bm_logfile)
     add_compile_definitions(BM_LOGFILE=${bm_logfile})
     include_directories(AFTER ${CMAKE_SOURCE_DIR}/misc)
-    list(APPEND binary_tree_profiling_sources ${CMAKE_SOURCE_DIR}/misc/harness.c)
+    list(APPEND binary_tree_profiling_sources harness.c)
 endif()
 
 set(target_shared_libs m)
@@ -23,7 +23,7 @@ else()
 endif()
 
 if (${gclib} STREQUAL bdwgc)
-    add_compile_definitions(BDWGC IGNOREFREE)
+    add_compile_definitions(BDWGC IGNOREFREE INDEX_VEC_DEFINED)
     include_directories(AFTER ${install_dir}/include)
     list(APPEND target_shared_libs gc)
 elseif (${gclib} STREQUAL cheribumpalloc)

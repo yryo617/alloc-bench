@@ -403,10 +403,11 @@ int binary_tree_benchmark(Command_Line *opts)
             cum_mark_time_ms, cum_mark_time_ns);
   uinfo("mark starts = %u, mark ends = %u", mark_start_no, mark_end_no);
   BM_Harness data = { .bm = "binary_tree",
-                      .retention_ratio =  1/ (float)(1 << opts->retention_ratio), 
                       .gc_cycles = GC_count,
+                      .gc_time_ms = GC_get_full_gc_total_time(), 
                       .gc_marktime_ms = (cum_mark_time_ns >= 500000U) ?  cum_mark_time_ms+1: cum_mark_time_ms,
-                      .gc_time_ms = GC_get_full_gc_total_time()};
+                      .retention_ratio =  1/ (float)(1 << opts->retention_ratio)
+		    };
 # else
   BM_Harness data = { .bm = "binary_tree",
                       .retention_ratio =  1 / (float)(1 << opts->retention_ratio), 
