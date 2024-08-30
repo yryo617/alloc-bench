@@ -6,8 +6,10 @@ import pathlib
 import subprocess
 import numpy as np
 import json
+from bin_graph import makeGraphs
 import graphplot as grplt
 import statistics as st
+import matplotlib.pyplot as plt
 
 
 lib_category = {
@@ -162,7 +164,9 @@ class Build:
                 "-p",
                 self.cmd.sshport,
                 _rconn_param[0],
-                f"mkdir -p " f"{self.append_basedir(_rconn_param)}" f"{self.arch_rdir}",
+                f"`mkdir` -p "
+                f"{self.append_basedir(_rconn_param)}"
+                f"{self.arch_rdir}",
             ],
             check=True,
         )
@@ -800,23 +804,11 @@ def build_dependencies(repo):
 
 
 def plot_result(repo):
-    if "bdwgc" in repo.cmd.libs:
-        graphs_to_plot = (
-            ["gc-cycles", "gc-time", "total-time", "rss-kb"] + pmc_events,
-            ["gc-load"],
-        )
-    else:
-        graphs_to_plot = (["total-time", "rss-kb"] + pmc_events, [])
+    print(repo.cmd.out_data_dir)
+    with open(f"{repo.cmd.out_data_dir}/out.json") as f:
+        data = json.load(f)
 
-    output_graph = pathlib.Path(f"{repo.cmd.out_data_dir}/{repo.cmd.args.output}")
-    grplt.plot(
-        "histogram",
-        pathlib.Path(f"{repo.cmd.out_data_dir}/{repo.cmd.args.output}"),
-        repo.cmd.out_data_dir / f"{output_graph.stem}.pdf",
-        graphs_to_plot,
-        True,
-        conf_interval=98,
-    )
+    makeGraphs(data, f"{repo.cmd.out_data_dir}/graphs")
 
 
 def verbose(repo):
