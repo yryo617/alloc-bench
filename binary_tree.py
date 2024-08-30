@@ -655,7 +655,7 @@ class CommandLine:
 
         self._retentionratio = (
             retentionratio[0],
-            retentionratio[1],
+            retentionratio[1] - 1,
             -retentionratio[2],  # negate for decrement
         )
 
