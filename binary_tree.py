@@ -164,9 +164,7 @@ class Build:
                 "-p",
                 self.cmd.sshport,
                 _rconn_param[0],
-                f"`mkdir` -p "
-                f"{self.append_basedir(_rconn_param)}"
-                f"{self.arch_rdir}",
+                f"mkdir -p " f"{self.append_basedir(_rconn_param)}" f"{self.arch_rdir}",
             ],
             check=True,
         )
