@@ -370,6 +370,9 @@ class Build:
             results[self.cmd.arch][bm_p][bm_id]["gc-time"] = _mean(
                 np.array(results[self.cmd.arch][bm_p][bm_id]["raw-gc-time"])
             )
+            results[self.cmd.arch][bm_p][bm_id]["mark-time"] = _mean(
+                np.array(results[self.cmd.arch][bm_p][bm_id]["raw-mark-time"])
+            )
             results[self.cmd.arch][bm_p][bm_id]["total-time"] = _mean(
                 np.array(results[self.cmd.arch][bm_p][bm_id]["raw-total-time"])
             )
@@ -385,6 +388,7 @@ class Build:
 
             self.normal(results, bm_p, bm_id, "gc-cycles")
             self.normal(results, bm_p, bm_id, "gc-time")
+            self.normal(results, bm_p, bm_id, "mark-time")
             self.normal(results, bm_p, bm_id, "rss-kb")
 
             for _event in pmc_events:
@@ -449,8 +453,11 @@ class Build:
                 "gc-cycles": 0.0,
                 "normalised-gc-cycles": 0.0,
                 "raw-gc-time": [],
+                "raw-mark-time": [],
                 "gc-time": 0.0,
+                "mark-time": 0.0,
                 "normalised-gc-time": 0.0,
+                "normalised-mark-time": 0.0,
                 "raw-total-time": [],
                 "total-time": 0.0,
                 "normalised-total-time": 0.0,
@@ -469,6 +476,9 @@ class Build:
         ]
         result[self.cmd.arch][bm][bm_id]["raw-gc-time"] += [
             float(new_data["gc_time_ms"])
+        ]
+        result[self.cmd.arch][bm][bm_id]["raw-mark-time"] += [
+            float(new_data["gc_marktime_ms"])
         ]
         result[self.cmd.arch][bm][bm_id]["raw-total-time"] += [
             float(new_data["total_time_ms"]) * 1000
