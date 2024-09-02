@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
+# colour palette sourced from here:
+# https://gka.github.io/palettes/#/5|s|006eea,ff8457|ffffe0,ff005e,93003a|1|1
 colours = ["#006eea", "#8872c6", "#ba77a2", "#e07d7e", "#ff8457"]
 
 
