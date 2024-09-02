@@ -803,10 +803,10 @@ def build_dependencies(repo):
 
 def plot_result(repo):
     print(repo.cmd.out_data_dir)
-    with open(f"{repo.cmd.out_data_dir}/out.json") as f:
+    with open(f"{repo.cmd.out_data_dir}/{repo.cmd.args.output}") as f:
         data = json.load(f)
 
-    makeGraphs(data, f"{repo.cmd.out_data_dir}/graphs")
+    makeGraphs(data, f"{repo.cmd.out_data_dir}/graphs", repo.cmd.treedepth[0])
 
 
 def verbose(repo):

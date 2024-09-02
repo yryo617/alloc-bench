@@ -13,22 +13,22 @@ def process(frame):
     return frame
 
 
-def make_cluster_keys(frame):
-    Is = sorted(set([frame[x]["i"] for x in frame]))
-    rs = sorted(set([frame[x]["r"] for x in frame]))
-    cluster_keys = [[f"m11-i{x}-r{r}" for r in rs] for x in Is]
+def make_cluster_keys(frame, treeDepth):
+    Is = sorted(set([frame[x]["i"] for x in frame]), key=int)
+    rs = sorted(set([frame[x]["r"] for x in frame]), key=int)
+    cluster_keys = [[f"m{treeDepth}-i{x}-r{r}" for r in rs] for x in Is]
 
     return (Is, rs, cluster_keys)
 
 
-def makeGraphs(data, outputFolder):
+def makeGraphs(data, outputFolder, treeDepth):
     output = pathlib.Path(outputFolder).resolve()
     output.mkdir(mode=0o750, parents=True, exist_ok=True)
 
     hybrid = process(data["hybrid"]["binary_tree_profiling"])
     purecap = process(data["purecap"]["binary_tree_profiling"])
 
-    Is, rs, cluster_keys = make_cluster_keys(hybrid)
+    Is, rs, cluster_keys = make_cluster_keys(hybrid, treeDepth)
 
     def makeNormalisedData(dataKey):
         return np.array(
@@ -69,5 +69,5 @@ def makeGraphs(data, outputFolder):
 
     mkChart(makeNormalisedData("total-time").T, "total-time", "Total time (h/p)")
     mkChart(makeNormalisedData("pct-gc").T, "pct-gc", "proportion of time spent on gc")
-    mkChart(makeNormalisedData("L2D_CACHE_REFILL").T, "cache refils", "")
+    mkChart(makeNormalisedData("L2D_CACHE_REFILL").T, "cache-refils", "")
     mkChart(makeNormalisedData("rss-kb").T, "rss-kb", "")
