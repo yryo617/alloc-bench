@@ -45,7 +45,7 @@ def makeGraphs(data, outputFolder, treeDepth):
         )
 
     # Your Data
-    def mkChart(data, title, measurement):
+    def mkChart(data, title, measurement, aspect_ratio="auto"):
         # Number of bars in each cluster
         num_bars = len(data[0])
         # Positions of the bars on the x-axis
@@ -69,12 +69,13 @@ def makeGraphs(data, outputFolder, treeDepth):
         ax.set_title(title)
         ax.set_xticks(x)
         ax.set_xticklabels(Is)
+        ax.set_aspect(aspect_ratio)
 
         ax.legend()
         # Display the plot
         fig.savefig(f"{outputFolder}/{title}.pdf")
 
-    def markTimeChart():
+    def markTimeChart(aspect_ratio="auto"):
         hData = np.array(
             [[hybrid[key]["pct-gc-mk"] for key in row] for row in cluster_keys]
         ).T
@@ -129,6 +130,7 @@ def makeGraphs(data, outputFolder, treeDepth):
         ax.set_title("% time spent Marking")
         ax.set_xticks(x)
         ax.set_xticklabels(Is)
+        ax.set_aspect(aspect_ratio)
 
         custom_objs = [Patch(facecolor=c, label="Color Patch") for c in colours] + [
             Patch(facecolor="none", edgecolor="black"),
