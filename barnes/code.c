@@ -90,6 +90,11 @@ Command line options:
 
 #include <math.h>
 #include <time.h>
+#include <stdlib.h>
+#include <getopt.h>
+
+void ANLinit();
+
 
 string defv[] = {                 /* DEFAULT PARAMETER VALUES              */
     /* file names for input/output                                         */
@@ -117,7 +122,7 @@ void SlaveStart ();
 void stepsystem (unsigned int ProcessId);
 void ComputeForces ();
 void Help();
-FILE *fopen();
+/* FILE *fopen(); */
 
 #if defined(BDWGC)
 unsigned int GC_count = 0;
@@ -132,9 +137,7 @@ main(argc, argv)
 int argc;
 string argv[];
 #else 
-bench_main(argc, argv)
-int argc;
-string argv[];
+int bench_main(int argc, string argv[])
 #endif
 {
    unsigned ProcessId = 0;
@@ -227,7 +230,7 @@ string argv[];
 /*
  * ANLINIT : initialize ANL macros
  */
-ANLinit()
+void ANLinit()
 {
    {;};
    /* Allocate global, shared memory */
