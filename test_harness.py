@@ -25,9 +25,6 @@ run_bench = [
  'cfrac.elf 17545186520507317056371138836327483792789528',
  'random_mixed_alloc.elf',
  'small_fixed_alloc.elf',
- 'glibc_bench_simple.elf', 
- 'glibc_bench_thread.elf',
- f'mstress.elf {num_proc} 50 25' 
 ]
 
 
@@ -110,9 +107,10 @@ class Build:
   def remote_install(self):
     executables = [str(elf) for elf in (self.cmd.install_dir/ 'bin').glob('*.elf')] 
     libs = [str(lib) for lib in (self.cmd.install_dir/ 'lib').glob('lib*.so.*.*.*')] 
-
+    
+    print(f"Remote install  libraries -> {libs}")
     # Add all the shim libs if required
-    if self.cmd.args.binlinkoption == 'benchlib':
+    if self.cmd.args.binlinkoption in ['dynamic', 'benchlib']:
       libs += [ str(self.cmd.install_dir / "lib" / f"lib{pathlib.Path(_exec).stem}_shim.so") for _exec in executables ]
 
     misc_data = [str(filename) for filename in (self.cmd.install_dir/ 'conf').rglob('*') if filename.is_file()] + \
@@ -357,7 +355,7 @@ class CommandLine:
                               description = prog[1] if prog[1] is not  None else 
                                                 f"This test harness builds bdwgc for the requisite -march. "
                                                 f"Each benchmark is linked with cheri-bdwgc library and installed in "
-                                                f"the --wordir directory. The installation can optionaly "
+                                                f"the --workdir directory. The installation can optionally "
                                                 f"build the cheribuild toolchain, download the bdwgc code and the benchmarks "
                                                 f"execute and collate all the results in an output json file. "
                                                 f"It will also optionally plot the graphs as pdf files",

@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Python
+.venv
+__pycache__
+
+# Editor Swap files 
+*.swp
+
