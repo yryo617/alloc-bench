@@ -18,9 +18,12 @@
 /*************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
-#include "stdinc.h"
+#include <stdarg.h>
 
+#include "stdinc.h"
+#include "util.h"
 #define HZ 60.0
 #define MULT 1103515245
 #define ADD 12345
@@ -38,8 +41,8 @@ local int lastrand;   /* the last random number */
 
 double prand();
 
-double xrand(xl, xh)
-  double xl, xh;		/* lower, upper bounds on number */
+double xrand(double xl, double xh)
+  // double xl, xh;		/* lower, upper bounds on number */
 {
    long random ();
    double x;
@@ -90,12 +93,20 @@ double cputime()
  * ERROR: scream and die quickly.
  */
 
-error(msg, a1, a2, a3, a4)
-  char *msg, *a1, *a2, *a3, *a4;
+void error(char *args, ...)
+  // char *msg, *a1, *a2, *a3, *a4;
 {
+  
+  // ry6 handling variadic parameters
+  int32_t val = (-1);
+  va_list params;
+  va_start(params, args);
+  
    extern int errno;
-
-   fprintf(stderr, msg, a1, a2, a3, a4);
+   char *msg = va_arg(params,char*);
+   
+   fprintf(stderr,msg,params);
+   va_end(params);
    if (errno != 0)
       perror("Error");
    exit(0);
