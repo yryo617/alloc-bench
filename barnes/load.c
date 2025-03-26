@@ -60,8 +60,8 @@ void maketree(unsigned ProcessId)
       }
       else {
 	 {;};
-	 fprintf(stderr, "Process %d found body %d to have zero mass\n",
-		 ProcessId, (int) p);	
+	 fprintf(stderr, "Process %d found body %ld to have zero mass\n",
+		 ProcessId, (long) p);	
 	 {;};
       }
    }

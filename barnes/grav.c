@@ -60,7 +60,8 @@ void hackgrav(bodyptr p,unsigned ProcessId)
  * GRAVSUB: compute a single body-body or body-cell interaction.
  */
 
-void gravsub(register nodeptr p, unsigned ProcessId, int level)
+// void gravsub(register nodeptr p, unsigned ProcessId, int level)
+void gravsub(register nodeptr p, unsigned ProcessId)
   // register nodeptr p;               /* body or cell to interact with     */
   // unsigned ProcessId;
   // int level;

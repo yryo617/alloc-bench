@@ -91,6 +91,7 @@ Command line options:
 #include "getparam.h"
 #include "util.h"
 #include "load.h"
+#include "grav.h"
 
 #include <math.h>
 #include <time.h>
@@ -581,7 +582,7 @@ stepsystem (unsigned int ProcessId)
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
         // {long time(); (trackstart) = time(0);};
-        {(trackstart) = time(0);};
+        trackstart = time(0);
 
     }
 
@@ -599,7 +600,7 @@ stepsystem (unsigned int ProcessId)
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
         // {long time(); (treebuildstart) = time(0);};
-        {(treebuildstart) = time(0);};
+        treebuildstart = time(0);
 
     }
 
