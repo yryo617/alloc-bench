@@ -7,8 +7,9 @@
  *  verify -- check that all minterms of F are contained in (Fold u Dold)
  *  and that all minterms of Fold are contained in (F u Dold).
  */
-bool verify(F, Fold, Dold)
-pcover F, Fold, Dold;
+// bool verify(F, Fold, Dold)
+bool verify(pcover F, pcover Fold, pcover Dold)
+// pcover F, Fold, Dold;
 {
     pcube p, last, *FD;
     bool verify_error = FALSE;
