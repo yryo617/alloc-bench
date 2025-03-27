@@ -149,7 +149,7 @@ global struct local_memory Local[MAX_PROC];
 void inputdate();
 void initoutpu();
 
-int startrun(void);
+void startrun(void);
 void tab_init();
 void testdata();
 void pickshell(real vec[], real rad);

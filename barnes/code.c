@@ -397,7 +397,7 @@ void SlaveStart()
  * STARTRUN: startup hierarchical N-body code.
  */
 
-int startrun(void)
+void startrun(void)
 {
    // string getparam();
    // int getiparam();
@@ -569,7 +569,7 @@ stepsystem (unsigned int ProcessId)
     bodyptr p,*pp;
     vector acc1, dacc, dvel, vel1, dpos;
     // int intpow();
-    unsigned int time;
+    // unsigned int time;
     unsigned int trackstart, trackend;
     unsigned int partitionstart, partitionend;
     unsigned int treebuildstart, treebuildend;
@@ -608,7 +608,8 @@ stepsystem (unsigned int ProcessId)
     maketree(ProcessId);
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (treebuildend) = time(0);};
+        // {long time(); (treebuildend) = time(0);};
+        treebuildend= time(0);
         Global->treebuildtime += treebuildend - treebuildstart;
     }
 
@@ -620,7 +621,9 @@ stepsystem (unsigned int ProcessId)
 				      + (ProcessId == (NPROC - 1)));
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (partitionstart) = time(0);};
+        // {long time(); (partitionstart) = time(0);};
+        
+        partitionstart = time(0);
     }
 
     Local[ProcessId].mynbody = 0;
@@ -628,18 +631,21 @@ stepsystem (unsigned int ProcessId)
 
 /*     B*RRIER(Global->Barcom,NPROC); */
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (partitionend) = time(0);};
+        // {long time(); (partitionend) = time(0);};
+        partitionend = time(0);
         Global->partitiontime += partitionend - partitionstart;
     }
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (forcecalcstart) = time(0);};
+        // {long time(); (forcecalcstart) = time(0);};
+        forcecalcstart = time(0);
     }
 
     ComputeForces(ProcessId);
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (forcecalcend) = time(0);};
+        // {long time(); (forcecalcend) = time(0);};
+        forcecalcend = time(0);
         Global->forcecalctime += forcecalcend - forcecalcstart;
     }
 
@@ -679,7 +685,8 @@ stepsystem (unsigned int ProcessId)
     {;};
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (trackend) = time(0);};
+        // {long time(); (trackend) = time(0);};
+        trackend = time(0);
         Global->tracktime += trackend - trackstart;
     }
     if (ProcessId==0) {
