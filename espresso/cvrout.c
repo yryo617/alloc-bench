@@ -497,7 +497,7 @@ void kiss_print_cube(FILE *fp, pPLA PLA, pcube p, char *out_string)
 }
 
 // output_symbolic_constraints(fp, PLA, output_symbolic)
-void output_symbolic_constraints(FILE *fp, pPLA PLA, int output_symbolic)
+int output_symbolic_constraints(FILE *fp, pPLA PLA, int output_symbolic)
 // FILE *fp;
 // pPLA PLA;
 // int output_symbolic;

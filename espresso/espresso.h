@@ -590,7 +590,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 // /* cvrout.c */	extern output_symbolic_constraints();
 /* cvrout.c */	extern void kiss_output(FILE *fp, pPLA PLA);
 /* cvrout.c */	extern void kiss_print_cube(FILE *fp, pPLA PLA, pcube p, char *out_string);
-/* cvrout.c */	extern void output_symbolic_constraints(FILE *fp, pPLA PLA, int output_symbolic);
+/* cvrout.c */	extern int output_symbolic_constraints(FILE *fp, pPLA PLA, int output_symbolic);
 /* cvrout.c */	extern void cprint();
 /* cvrout.c */	extern void debug1_print();
 /* cvrout.c */	extern void debug_print();
