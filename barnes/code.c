@@ -88,10 +88,16 @@ Command line options:
 #  include "bench_harness.h"
 #endif 
 
+#include "getparam.h"
+#include "util.h"
+#include "load.h"
+#include "grav.h"
+
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>
 #include <getopt.h>
+
 
 void ANLinit();
 
@@ -120,7 +126,7 @@ string defv[] = {                 /* DEFAULT PARAMETER VALUES              */
 
 void SlaveStart ();
 void stepsystem (unsigned int ProcessId);
-void ComputeForces ();
+// void ComputeForces ();
 void Help();
 /* FILE *fopen(); */
 
@@ -133,9 +139,9 @@ static void signal_gc()
 #endif
 
 #if !defined(BENCHLIB)
-main(argc, argv)
-int argc;
-string argv[];
+int main(int argc, string argv[])
+// int argc;
+// string argv[];
 #else 
 int bench_main(int argc, string argv[])
 #endif
@@ -168,9 +174,6 @@ int bench_main(int argc, string argv[])
     }
 #endif
 
-   startrun();
-   initoutput();
-   tab_init();
 
    Global->tracktime = 0;
    Global->partitiontime = 0;
@@ -185,11 +188,15 @@ int bench_main(int argc, string argv[])
    }
 
    /* Make the master do slave work so we don't waste the processor */
-   {long time(); (Global->computestart) = time(0);};
+   // {long time(); (Global->computestart) = time(0);};
+   {(Global->computestart) = time(0);};
+
    printf("COMPUTESTART  = %12u\n",Global->computestart);
    SlaveStart();
 
-   {long time(); (Global->computeend) = time(0);};
+
+   // {long time(); (Global->computeend) = time(0);};
+   {(Global->computeend) = time(0);};
 
    {;};
 
@@ -252,8 +259,8 @@ void ANLinit()
 /*
  * INIT_ROOT: Processor 0 reinitialize the global root at each time step
  */
-init_root (ProcessId)
-   unsigned int ProcessId;
+void init_root (unsigned int ProcessId)
+   // unsigned int ProcessId;
 {
    int i;
 
@@ -267,8 +274,8 @@ init_root (ProcessId)
    Local[0].mynumcell=1;
 }
 
-int Log_base_2(number)
-int number;
+int Log_base_2(int number)
+// int number;
 {
    int cumulative;
    int out;
@@ -291,7 +298,7 @@ int number;
  * TAB_INIT : allocate body and cell data space
  */
 
-tab_init()
+void tab_init()
 {
    cellptr pc;
    int i;
@@ -390,12 +397,12 @@ void SlaveStart()
  * STARTRUN: startup hierarchical N-body code.
  */
 
-startrun()
+void startrun(void)
 {
-   string getparam();
-   int getiparam();
-   bool getbparam();
-   double getdparam();
+   // string getparam();
+   // int getiparam();
+   // bool getbparam();
+   // double getdparam();
    int seed;
    infile = getparam("in");
 
@@ -436,9 +443,11 @@ startrun()
 
 #define MFRAC  0.999                /* mass cut off at MFRAC of total */
 
-testdata()
+void testdata()
 {
-   real rsc, vsc, sqrt(), xrand(), pow(), rsq, r, v, x, y;
+   // real rsc, vsc, sqrt(), xrand(), pow(), rsq, r, v, x, y;
+   real rsc, vsc, rsq, r, v, x, y;
+
    vector cmr, cmv;
    register bodyptr p;
    int rejects = 0;
@@ -515,13 +524,13 @@ testdata()
  * PICKSHELL: pick a random point on a sphere of specified radius.
  */
 
-pickshell(vec, rad)
-   real vec[];                     /* coordinate vector chosen */
-   real rad;                       /* radius of chosen point */
+void pickshell(real vec[], real rad)
+   // real vec[];                     /* coordinate vector chosen */
+   // real rad;                       /* radius of chosen point */
 {
    register int k;
-   double rsq, xrand(), sqrt(), rsc;
-
+   // double rsq, xrand(), sqrt(), rsc;
+   double rsq, rsc;
    do {
       for (k = 0; k < NDIM; k++) {
 	 vec[k] = xrand(-1.0, 1.0);
@@ -535,8 +544,8 @@ pickshell(vec, rad)
 
 
 
-int intpow(i,j)
-  int i,j;
+int intpow(int i,int j)
+  // int i,j;
 {   
     int k;
     int temp = 1;
@@ -552,15 +561,15 @@ int intpow(i,j)
  */
 
 void
-stepsystem (ProcessId)
-   unsigned int ProcessId;
+stepsystem (unsigned int ProcessId)
+   // unsigned int ProcessId;
 {
     int i;
     real Cavg;
     bodyptr p,*pp;
     vector acc1, dacc, dvel, vel1, dpos;
-    int intpow();
-    unsigned int time;
+    // int intpow();
+    // unsigned int time;
     unsigned int trackstart, trackend;
     unsigned int partitionstart, partitionend;
     unsigned int treebuildstart, treebuildend;
@@ -572,7 +581,9 @@ stepsystem (ProcessId)
     }
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (trackstart) = time(0);};
+        // {long time(); (trackstart) = time(0);};
+        trackstart = time(0);
+
     }
 
     if (ProcessId == 0) {
@@ -588,14 +599,17 @@ stepsystem (ProcessId)
     {;};
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (treebuildstart) = time(0);};
+        // {long time(); (treebuildstart) = time(0);};
+        treebuildstart = time(0);
+
     }
 
     /* load bodies into tree   */
     maketree(ProcessId);
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (treebuildend) = time(0);};
+        // {long time(); (treebuildend) = time(0);};
+        treebuildend= time(0);
         Global->treebuildtime += treebuildend - treebuildstart;
     }
 
@@ -607,7 +621,9 @@ stepsystem (ProcessId)
 				      + (ProcessId == (NPROC - 1)));
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (partitionstart) = time(0);};
+        // {long time(); (partitionstart) = time(0);};
+        
+        partitionstart = time(0);
     }
 
     Local[ProcessId].mynbody = 0;
@@ -615,18 +631,21 @@ stepsystem (ProcessId)
 
 /*     B*RRIER(Global->Barcom,NPROC); */
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (partitionend) = time(0);};
+        // {long time(); (partitionend) = time(0);};
+        partitionend = time(0);
         Global->partitiontime += partitionend - partitionstart;
     }
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (forcecalcstart) = time(0);};
+        // {long time(); (forcecalcstart) = time(0);};
+        forcecalcstart = time(0);
     }
 
     ComputeForces(ProcessId);
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (forcecalcend) = time(0);};
+        // {long time(); (forcecalcend) = time(0);};
+        forcecalcend = time(0);
         Global->forcecalctime += forcecalcend - forcecalcstart;
     }
 
@@ -666,7 +685,8 @@ stepsystem (ProcessId)
     {;};
 
     if ((ProcessId == 0) && (Local[ProcessId].nstep >= 2)) {
-        {long time(); (trackend) = time(0);};
+        // {long time(); (trackend) = time(0);};
+        trackend = time(0);
         Global->tracktime += trackend - trackstart;
     }
     if (ProcessId==0) {
@@ -689,8 +709,8 @@ stepsystem (ProcessId)
 
 
 void
-ComputeForces (ProcessId)
-   unsigned int ProcessId;
+ComputeForces (unsigned int ProcessId)
+   // unsigned int ProcessId;
 {
    bodyptr p,*pp;
    vector acc1, dacc, dvel, vel1, dpos;
@@ -720,13 +740,13 @@ ComputeForces (ProcessId)
  * assigned to the processor.  
  */
 
-find_my_initial_bodies(btab, nbody, ProcessId)
-bodyptr btab;
-int nbody;
-unsigned int ProcessId;
+void find_my_initial_bodies(bodyptr btab, int nbody, unsigned int ProcessId)
+// bodyptr btab;
+// int nbody;
+// unsigned int ProcessId;
 {
   int Myindex;
-  int intpow();
+  // int intpow();
   int equalbodies;
   int extra,offset,i;
 
@@ -747,11 +767,11 @@ unsigned int ProcessId;
 }
 
 
-find_my_bodies(mycell, work, direction, ProcessId)
-  nodeptr mycell;
-  int work;
-  int direction;
-  unsigned ProcessId;
+void find_my_bodies(nodeptr mycell, int work, int direction, unsigned ProcessId)
+  // nodeptr mycell;
+  // int work;
+  // int direction;
+  // unsigned ProcessId;
 {
    int i;
    leafptr l;
@@ -792,8 +812,8 @@ find_my_bodies(mycell, work, direction, ProcessId)
  * variables) between each time step.
  */
 
-Housekeep(ProcessId)
-unsigned ProcessId;
+void Housekeep(unsigned ProcessId)
+// unsigned ProcessId;
 {
    Local[ProcessId].myn2bcalc = Local[ProcessId].mynbccalc 
       = Local[ProcessId].myselfint = 0;
@@ -805,7 +825,7 @@ unsigned ProcessId;
  * SETBOUND: Compute the initial size of the root of the tree; only done
  * before first time step, and only processor 0 does it
  */
-setbound()
+void setbound()
 {
    int i;
    real side ;

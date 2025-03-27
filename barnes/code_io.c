@@ -22,7 +22,7 @@
  */
  
 #define global extern
-    
+#include <stdlib.h>
 #include "code.h"
 #if defined(BDWGC) // @djichthys  - changed to not use deprecated stuff
 #  include "gc.h"
@@ -32,17 +32,17 @@
 #else
 #  define MALLOC malloc
 #endif
+#include "util.h"
 
-
-void in_int (), in_real (), in_vector ();
-void out_int (), out_real (), out_vector ();
+// void in_int (), in_real (), in_vector ();
+// void out_int (), out_real (), out_vector ();
 void diagnostics (unsigned int ProcessId);
     
 /*
  * INPUTDATA: read initial conditions from input file.
  */
     
-inputdata ()
+void inputdata ()
 {
    stream instr;
    permanent char headbuf[128];
@@ -91,7 +91,7 @@ inputdata ()
  */
 
 
-initoutput()
+void initoutput(void)
 {
    printf("\n\t\t%s\n\n", headline);
    printf("%10s%10s%10s%10s%10s%10s%10s%10s\n",
@@ -110,8 +110,8 @@ initoutput()
  */
 
 void
-output (ProcessId)
-   unsigned int ProcessId;
+output (unsigned int ProcessId)
+   // unsigned int ProcessId;
 {
    int nttot, nbavg, ncavg,k;
    double cputime();
@@ -163,8 +163,8 @@ output (ProcessId)
  */
 
 void
-diagnostics (ProcessId)
-   unsigned int ProcessId;
+diagnostics (unsigned int ProcessId)
+   // unsigned int ProcessId;
 {
    register bodyptr p,*pp;
    real velsq;
@@ -215,17 +215,17 @@ diagnostics (ProcessId)
  * Low-level input and output operations.
  */
 
-void in_int(str, iptr)
-  stream str;
-  int *iptr;
+void in_int(stream str, int *iptr)
+  // stream str;
+  // int *iptr;
 {
    if (fscanf(str, "%d", iptr) != 1)
       error("in_int: input conversion error\n");
 }
 
-void in_real(str, rptr)
-  stream str;
-  real *rptr;
+void in_real(stream str, real *rptr)
+  // stream str;
+  // real *rptr;
 {
    double tmp;
 
@@ -234,9 +234,9 @@ void in_real(str, rptr)
    *rptr = tmp;
 }
 
-void in_vector(str, vec)
-  stream str;
-  vector vec;
+void in_vector(stream str, vector vec)
+  // stream str;
+  // vector vec;
 {
    double tmpx, tmpy, tmpz;
 
@@ -245,23 +245,23 @@ void in_vector(str, vec)
    vec[0] = tmpx;    vec[1] = tmpy;    vec[2] = tmpz;
 }
 
-void out_int(str, ival)
-  stream str;
-  int ival;
+void out_int(stream str, int ival)
+  // stream str;
+  // int ival;
 {
    fprintf(str, "  %d\n", ival);
 }
 
-void out_real(str, rval)
-  stream str;
-  real rval;
+void out_real(stream str, real rval)
+  // stream str;
+  // real rval;
 {
    fprintf(str, " %21.14E\n", rval);
 }
 
-void out_vector(str, vec)
-  stream str;
-  vector vec;
+void out_vector(stream str, vector vec)
+  // stream str;
+  // vector vec;
 {
    fprintf(str, " %21.14E %21.14E", vec[0], vec[1]);
    fprintf(str, " %21.14E\n",vec[2]);

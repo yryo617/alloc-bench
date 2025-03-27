@@ -22,8 +22,10 @@
 
 #include "code.h"
 #include "defs.h"
-
-bool intcoord();
+#include "load.h"
+#include "util.h"
+#include <stdlib.h>
+// bool intcoord();
 cellptr makecell(unsigned int ProcessId);
 leafptr makeleaf(unsigned int ProcessId);
 cellptr SubdivideLeaf(leafptr le, cellptr parent, unsigned int l,
@@ -37,8 +39,8 @@ nodeptr loadtree(bodyptr p, cellptr root, unsigned int ProcessId);
  * MAKETREE: initialize tree structure for hack force calculation.
  */
 
-maketree(ProcessId)
-   unsigned ProcessId;
+void maketree(unsigned ProcessId)
+   // unsigned ProcessId;
 {
    bodyptr p, *pp;
 
@@ -58,8 +60,8 @@ maketree(ProcessId)
       }
       else {
 	 {;};
-	 fprintf(stderr, "Process %d found body %d to have zero mass\n",
-		 ProcessId, (int) p);	
+	 fprintf(stderr, "Process %d found body %ld to have zero mass\n",
+		 ProcessId, (long) p);	
 	 {;};
       }
    }
@@ -68,9 +70,9 @@ maketree(ProcessId)
    {;};
 }
 
-cellptr InitCell(parent, ProcessId)
-   cellptr parent;
-   unsigned ProcessId;
+cellptr InitCell(cellptr parent, unsigned ProcessId)
+   // cellptr parent;
+   // unsigned ProcessId;
 {
    cellptr c;
    int i, Mycell;
@@ -88,9 +90,9 @@ cellptr InitCell(parent, ProcessId)
    return (c);
 }
 
-leafptr InitLeaf(parent, ProcessId)
-   cellptr parent;
-   unsigned ProcessId;
+leafptr InitLeaf(cellptr parent, unsigned ProcessId)
+   // cellptr parent;
+   // unsigned ProcessId;
 {
    leafptr l;
    int i, Mycell;
@@ -108,8 +110,8 @@ leafptr InitLeaf(parent, ProcessId)
    return (l);
 }
 
-printtree (n)
-   nodeptr n;
+void printtree (nodeptr n)
+   // nodeptr n;
 {
    int k;
    cellptr c;
@@ -179,12 +181,14 @@ printtree (n)
  */
 
 nodeptr
-loadtree(p, root, ProcessId)
-   bodyptr p;                        /* body to load into tree */
-   cellptr root;
-   unsigned ProcessId;
+loadtree(bodyptr p, cellptr root, unsigned ProcessId)
+   // bodyptr p;                        /* body to load into tree */
+   // cellptr root;
+   // unsigned ProcessId;
 {
-   int l, xq[NDIM], xp[NDIM], xor[NDIM], subindex(), flag;
+   // int l, xq[NDIM], xp[NDIM], xor[NDIM], subindex(), flag;
+   int l, xq[NDIM], xp[NDIM], xor[NDIM], flag;
+
    int i, j, root_level;
    bool valid_root;
    int kidIndex;
@@ -293,9 +297,9 @@ loadtree(p, root, ProcessId)
 /* * INTCOORD: compute integerized coordinates.  * Returns: TRUE
 unless rp was out of bounds.  */
 
-bool intcoord(xp, rp)
-  int xp[NDIM];                  /* integerized coordinate vector [0,IMAX) */
-  vector rp;                     /* real coordinate vector (system coords) */
+bool intcoord(int xp[NDIM], vector rp)
+  // int xp[NDIM];                  /* integerized coordinate vector [0,IMAX) */
+  // vector rp;                     /* real coordinate vector (system coords) */
 {
    int k;
    bool inb;
@@ -318,9 +322,9 @@ bool intcoord(xp, rp)
  * SUBINDEX: determine which subcell to select.
  */
 
-int subindex(x, l)
-  int x[NDIM];                       /* integerized coordinates of particle */
-  int l;                             /* current level of tree */
+int subindex(int x[NDIM], int l)
+  // int x[NDIM];                       /* integerized coordinates of particle */
+  // int l;                             /* current level of tree */
 {
    int i, k;
    int yes;
@@ -348,9 +352,9 @@ int subindex(x, l)
  * HACKCOFM: descend tree finding center-of-mass coordinates.
  */
 
-hackcofm(nc, ProcessId)
-  int nc;
-  unsigned ProcessId;
+void hackcofm(int nc, unsigned ProcessId)
+  // int nc;
+  // unsigned ProcessId;
 {
    int i,Myindex;
    nodeptr r;
@@ -441,11 +445,11 @@ hackcofm(nc, ProcessId)
 }
 
 cellptr
-SubdivideLeaf (le, parent, l, ProcessId)
-   leafptr le;
-   cellptr parent;
-   unsigned int l;
-   unsigned int ProcessId;
+SubdivideLeaf (leafptr le, cellptr parent, unsigned int l, unsigned int ProcessId)
+   // leafptr le;
+   // cellptr parent;
+   // unsigned int l;
+   // unsigned int ProcessId;
 {
    cellptr c;
    int i, index;
@@ -503,8 +507,8 @@ SubdivideLeaf (le, parent, l, ProcessId)
  * MAKECELL: allocation routine for cells.
  */
 
-cellptr makecell(ProcessId)
-   unsigned ProcessId;
+cellptr makecell(unsigned ProcessId)
+   // unsigned ProcessId;
 {
    cellptr c;
    int i, Mycell;
@@ -530,8 +534,8 @@ cellptr makecell(ProcessId)
  * MAKELEAF: allocation routine for leaves.
  */
 
-leafptr makeleaf(ProcessId)
-   unsigned ProcessId;
+leafptr makeleaf(unsigned ProcessId)
+   // unsigned ProcessId;
 {
    leafptr le;
    int i, Myleaf;

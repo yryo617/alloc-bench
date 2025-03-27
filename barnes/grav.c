@@ -25,17 +25,17 @@
 #define global extern
 
 #include "code.h"
-
+#include "grav.h"
 /*
  * HACKGRAV: evaluate grav field at a given particle.
  */
   
-hackgrav(p,ProcessId)
-  bodyptr p;
-  unsigned ProcessId;
+void hackgrav(bodyptr p,unsigned ProcessId)
+  // bodyptr p;
+  // unsigned ProcessId;
 
 {
-   extern gravsub();
+   // extern gravsub();
 
    Local[ProcessId].pskip = p;
    SETV(Local[ProcessId].pos0, Pos(p));
@@ -60,10 +60,11 @@ hackgrav(p,ProcessId)
  * GRAVSUB: compute a single body-body or body-cell interaction.
  */
 
-gravsub(p, ProcessId, level)
-  register nodeptr p;               /* body or cell to interact with     */
-  unsigned ProcessId;
-  int level;
+// void gravsub(register nodeptr p, unsigned ProcessId, int level)
+void gravsub(register nodeptr p, unsigned ProcessId)
+  // register nodeptr p;               /* body or cell to interact with     */
+  // unsigned ProcessId;
+  // int level;
 {
     double sqrt();
     real drabs, phii, mor3;
@@ -108,9 +109,9 @@ gravsub(p, ProcessId, level)
 
 local proced hacksub;
 
-hackwalk(sub, ProcessId)
-  proced sub;                                /* routine to do calculation */
-  unsigned ProcessId;
+void hackwalk(proced sub, unsigned ProcessId)
+  // proced sub;                                /* routine to do calculation */
+  // unsigned ProcessId;
 {
     walksub(Global->G_root, Global->rsize * Global->rsize, ProcessId);
 }
@@ -119,12 +120,12 @@ hackwalk(sub, ProcessId)
  * WALKSUB: recursive routine to do hackwalk operation.
  */
 
-walksub(n, dsq, ProcessId)
-   nodeptr n;                        /* pointer into body-tree    */
-   real dsq;                         /* size of box squared       */
-   unsigned ProcessId;
+void walksub(nodeptr n, real dsq, unsigned ProcessId)
+   // nodeptr n;                        /* pointer into body-tree    */
+   // real dsq;                         /* size of box squared       */
+   // unsigned ProcessId;
 {
-   bool subdivp();
+   // bool subdivp();
    nodeptr* nn;
    leafptr l;
    bodyptr p;
@@ -143,7 +144,7 @@ walksub(n, dsq, ProcessId)
 	 for (i = 0; i < l->num_bodies; i++) {
 	    p = Bodyp(l)[i];
 	    if (p != Local[ProcessId].pskip) {
-	       gravsub(p, ProcessId);
+	       gravsub(p, ProcessId);//TODO: incompatible parameter counts
 	    }
 	    else {
 	       Local[ProcessId].skipself = TRUE;
@@ -161,10 +162,10 @@ walksub(n, dsq, ProcessId)
  * Side effects: sets  pmem,dr, and drsq.
  */
 
-bool subdivp(p, dsq, ProcessId)
-   register nodeptr p;                      /* body/cell to be tested    */
-   real dsq;                                /* size of cell squared      */
-   unsigned ProcessId;
+bool subdivp(register nodeptr p, real dsq, unsigned ProcessId)
+   // register nodeptr p;                      /* body/cell to be tested    */
+   // real dsq;                                /* size of cell squared      */
+   // unsigned ProcessId;
 {
    SUBV(Local[ProcessId].dr, Pos(p), Local[ProcessId].pos0);
    DOTVP(Local[ProcessId].drsq, Local[ProcessId].dr, Local[ProcessId].dr);
