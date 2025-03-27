@@ -1,7 +1,7 @@
 #include "espresso.h"
 
 // map_dcset(PLA)
-int map_dcset(pPLA PLA) //NULL is MACRO of 0
+void* map_dcset(pPLA PLA) //NULL is MACRO of (void*) 0
 // pPLA PLA;
 {
     int var, i;
