@@ -157,7 +157,7 @@ void find_my_initial_bodies(bodyptr btab, int nbody, unsigned int ProcessId);
 void find_my_bodies(nodeptr mycell, int work, int direction, unsigned ProcessId); 
 void Housekeep(unsigned ProcessId);
 void setbound();
-
+void ComputeForces (unsigned int ProcessId);
 // functions in code_io
 void in_int(stream str, int *iptr);
 void in_real(stream str, real *rptr);

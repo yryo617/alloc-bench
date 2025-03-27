@@ -126,7 +126,7 @@ string defv[] = {                 /* DEFAULT PARAMETER VALUES              */
 
 void SlaveStart ();
 void stepsystem (unsigned int ProcessId);
-void ComputeForces ();
+// void ComputeForces ();
 void Help();
 /* FILE *fopen(); */
 
