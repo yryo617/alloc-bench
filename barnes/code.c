@@ -76,6 +76,7 @@ Command line options:
 #include "defs.h"
 #if defined(BDWGC) // @djichthys  - changed to not use deprecated stuff
 #  include "gc.h"
+#  include "gc/gc_mark.h"
 #  define MALLOC GC_MALLOC
 #elif defined(BUMPALLOC)
 #  include "bump_alloc.h"

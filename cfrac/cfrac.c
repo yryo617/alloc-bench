@@ -168,6 +168,8 @@ unsigned findk(n, m, aborts, maxk)
 
 #if defined(BDWGC)
 #include "gc.h"
+#include "gc/gc_mark.h"
+
 unsigned int GC_count = 0;
 static void signal_gc()
 {

@@ -44,6 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if defined(BDWGC)
 #  include "gc.h"
+#  include "gc/gc_mark.h"
 #  define MALLOC(size) GC_MALLOC((size))
 #  ifdef IGNOREFREE
 #    define FREE

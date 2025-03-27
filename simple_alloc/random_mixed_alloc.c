@@ -1,9 +1,11 @@
 #include <assert.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #ifdef BDWGC 
 # include "gc.h"
+# include "gc/gc_mark.h"
 # define malloc(x) GC_MALLOC((x))
 # ifdef IGNOREFREE
 #  define free(x) {};

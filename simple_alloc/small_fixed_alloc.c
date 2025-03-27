@@ -4,6 +4,7 @@
 
 #ifdef BDWGC 
 # include "gc.h"
+# include "gc/gc_mark.h"
 #endif
 
 #if defined(BM_LOGFILE)
