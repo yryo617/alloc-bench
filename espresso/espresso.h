@@ -641,7 +641,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* hack.c */	extern void find_dc_inputs();
 /* hack.c */    extern void find_inputs(pcover A, pPLA PLA, symbolic_list_t *list, int base, int value, pcover *newF, pcover *newD);
 /* hack.c */	extern void form_bitvector(pset p, int base, int value, symbolic_list_t *list);
-/* hack.c */	extern bool map_dcset(pPLA PLA);
+/* hack.c */	extern int map_dcset(pPLA PLA);
 /* hack.c */	extern void map_output_symbolic(pPLA PLA);
 /* hack.c */	extern void map_symbolic(pPLA PLA);
 
