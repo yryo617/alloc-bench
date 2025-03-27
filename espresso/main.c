@@ -583,13 +583,14 @@ static int mainx(int argc, char *argv[])
 }
 
 
-getPLA(opt, argc, argv, option, PLA, out_type)
-int opt;
-int argc;
-char *argv[];
-int option;
-pPLA *PLA;
-int out_type;
+// getPLA(opt, argc, argv, option, PLA, out_type)
+void getPLA(int opt, int argc, char *argv[], int option, pPLA *PLA, int out_type)
+// int opt;
+// int argc;
+// char *argv[];
+// int option;
+// pPLA *PLA;
+// int out_type;
 {
     FILE *fp;
     int needs_dcset, needs_offset;
@@ -627,7 +628,7 @@ int out_type;
 }
 
 
-runtime()
+void runtime()
 {
     int i;
     long total = 1, temp;
@@ -646,7 +647,7 @@ runtime()
 }
 
 
-init_runtime()
+void init_runtime()
 {
     total_name[READ_TIME] =     "READ       ";
     total_name[WRITE_TIME] =    "WRITE      ";
@@ -666,7 +667,7 @@ init_runtime()
 }
 
 
-subcommands()
+void subcommands()
 {
     int i, col;
     printf("                ");
@@ -685,7 +686,7 @@ subcommands()
 }
 
 
-usage()
+void usage()
 {
     printf("%s\n\n", VERSION);
     printf("SYNOPSIS: espresso [options] [file]\n\n");
@@ -718,11 +719,12 @@ usage()
  *  Hack for backward compatibility (ACK! )
  */
 
-backward_compatibility_hack(argc, argv, option, out_type)
-int *argc;
-char **argv;
-int *option;
-int *out_type;
+// backward_compatibility_hack(argc, argv, option, out_type)
+void backward_compatibility_hack(int *argc, char **argv, int *option,  int *out_type)
+// int *argc;
+// char **argv;
+// int *option;
+// int *out_type;
 {
     int i, j;
 
@@ -783,9 +785,10 @@ int *out_type;
 
 
 /* delete_arg -- delete an argument from the argument list */
-delete_arg(argc, argv, num)
-int *argc, num;
-register char *argv[];
+// delete_arg(argc, argv, num)
+void delete_arg(int *argc, register char *argv[], int num)
+// int *argc, num;
+// register char *argv[];
 {
     register int i;
     (*argc)--;
@@ -796,9 +799,10 @@ register char *argv[];
 
 
 /* check_arg -- scan argv for an argument, and return TRUE if found */
-bool check_arg(argc, argv, s)
-int *argc;
-register char *argv[], *s;
+// bool check_arg(argc, argv, s)
+bool check_arg(int *argc, register char *argv[], register char *s)
+// int *argc;
+// register char *argv[], *s;
 {
     register int i;
     for(i = 1; i < *argc; i++) {
