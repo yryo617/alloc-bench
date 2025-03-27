@@ -21,6 +21,7 @@
 	    ((type *) gc_malloc(sizeof(type) * ((num)==0?1:(num))))
 #elif defined(BDWGC)
 #include "gc.h"
+#include "gc/gc_mark.h"
 #define ALLOC(type, num)	\
     ((type *) GC_MALLOC(sizeof(type) * ((num)==0?1:(num))))
 #define REALLOC(type, obj, num)	\
