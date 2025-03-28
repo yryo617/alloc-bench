@@ -1,8 +1,9 @@
 #include "espresso.h"
 
 
-find_equiv_outputs(PLA)
-pPLA PLA;
+// find_equiv_outputs(PLA)
+void find_equiv_outputs(pPLA PLA)
+// pPLA PLA;
 {
     int i, j, ipart, jpart, some_equiv;
     pcover *R, *F;

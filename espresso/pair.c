@@ -357,7 +357,7 @@ static pcover best_F, best_D, best_R;
 static int pair_minim_strategy;
 
 
-print_pair(pair)
+void print_pair(pair)
 ppair pair;
 {
     int i;
@@ -455,7 +455,7 @@ register ppair pair;
 	4) for phase assignment
 */
 
-pair_all(PLA, pair_strategy)
+void pair_all(PLA, pair_strategy)
 pPLA PLA;
 int pair_strategy;
 {
@@ -573,7 +573,7 @@ ppair pair;
     global_PLA->phase = NULL;
 }
 
-generate_all_pairs(pair, n, candidate, action)
+int generate_all_pairs(pair, n, candidate, action)
 ppair pair;
 int n;
 pset candidate;

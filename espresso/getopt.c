@@ -1,5 +1,5 @@
 #include "espresso.h"
-#include "port.h"
+// #include "port.h" //ry6
 /*  File   : getopt.c
     Author : Henry Spencer, University of Toronto
     Updated: 28 April 1984
