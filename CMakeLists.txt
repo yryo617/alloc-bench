@@ -79,8 +79,8 @@ if (${gclib} STREQUAL bdwgc)
       # These libraries are built using ExternalProject. install(TARGETS) does not work
       #file(GLOB gclibraries FOLLOW_SYMLINKS ${bdwgc_build_prefix}/lib/lib*)
       set(gclibraries 
-              libgc.so.1.5.1 libgc.so.1 libgc.so
-              libcord.so.1.5.0 libcord.so.1 libcord.so)
+              libgc.so.1.5.3 libgc.so.1 libgc.so
+              libcord.so.1.5.1 libcord.so.1 libcord.so)
     endif() 
 
     list(TRANSFORM gclibraries PREPEND ${bdwgc_build_prefix}/lib/)
