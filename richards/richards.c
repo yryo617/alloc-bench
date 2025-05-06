@@ -136,7 +136,7 @@ void createtask(int id,
                 uintptr_t v2)
 {
     struct task *t = (struct task *)MALLOC(sizeof(struct task));
-    printf("g_alloc = %u, t = %p\n", ++g_alloc, t);
+    //printf("g_alloc = %u, t = %p\n", ++g_alloc, t);
 
     tasktab[id] = t;
     t->t_link   = tasklist;
@@ -154,7 +154,7 @@ struct packet *pkt(struct packet *link, int id, int kind)
 {
     int i;
     struct packet *p = (struct packet *)MALLOC(sizeof(struct packet));
-    printf("g_alloc = %u\n", ++g_alloc);
+    //printf("g_alloc = %u\n", ++g_alloc);
 
     for (i=0; i<=BUFSIZE; i++)
         p->p_a2[i] = 0;
