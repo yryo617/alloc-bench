@@ -79,6 +79,27 @@ class Build:
                            f'cheribsd-morello-hybrid'], check=True)
     ret.check_returncode()
 
+    # patch compiler config for benchmark API
+    cheri_output = self.cmd.dependency_dir.home() / "cheri/output"
+    compiler_path = cheri_output / "morello-sdk/bin" 
+    bm_api_cfg = compiler_path / "cheribsd-morello-benchmarkabi.cfg"
+
+    try: 
+      with open(bm_api_cfg, "x") as fd: 
+        fd.write(f"-target\n"
+                 f"aarch64-unknown-freebsd13\n"
+                 f"--sysroot={cheri_output}/rootfs-morello-purecap\n"
+                 f"-B{compiler_path}\n"
+                 f"-mcpu=rainier\n"
+                 f"-march=morello\n"
+                 f"-mabi=purecap-benchmark\n"
+                 f"-Xclang\n"
+                 f"-morello-vararg=new\n"
+                 f"-morello-bounded-memargs\n")
+    except FileExistsError as fee: 
+     print("Benchmark ABI already written")
+
+
 
   def configure(self):
     cmake_build = ['cmake','-B', f'{self.cmd.build_dir}',
@@ -119,6 +140,10 @@ class Build:
     _rconn_param = self._sanitize_basedir(self.cmd.args.remoteconnect.split(sep=':',maxsplit=1))
 
     # Create execution directory within remote base dir
+    #mkdir_ = ['ssh', '-p', self.cmd.sshport, _rconn_param[0] , \
+    #                       f'mkdir -p ' 
+    #                       f'{self.append_basedir(_rconn_param)}'
+    #                       f'{self.arch_rdir}']
     ret = subprocess.run( ['ssh', '-p', self.cmd.sshport, _rconn_param[0] , \
                            f'mkdir -p ' 
                            f'{self.append_basedir(_rconn_param)}'
@@ -126,6 +151,10 @@ class Build:
     ret.check_returncode()
 
     # Copy executables from install directory to remote-install dir
+    #rinstall_ = ['scp', '-P', self.cmd.sshport] + executables + libs + misc_data +\
+    #                      [f'{_rconn_param[0]}:{self.append_basedir(_rconn_param)}'
+    #                       f'{self.arch_rdir}']
+    #print(f"RINSTALL = {rinstall_}")
     ret = subprocess.run( ['scp', '-P', self.cmd.sshport] + executables + libs + misc_data +
                           [f'{_rconn_param[0]}:{self.append_basedir(_rconn_param)}'
                            f'{self.arch_rdir}'], check=True)
@@ -417,7 +446,7 @@ class CommandLine:
 
   def __gen_options(self):
     self.parser.add_argument('-m', '--march', help=f"morello architecture to build bdwgc for",
-                            choices = ['hybrid','purecap'],
+                            choices = ['hybrid','purecap', 'benchmarkabi'],
                             required = True)
     self.parser.add_argument('-w', '--workdir', required=True,
                                 help=f"directory outside source-dir to build and install benchmarks")
