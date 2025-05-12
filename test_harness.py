@@ -79,6 +79,9 @@ class Build:
                            f'cheribsd-morello-hybrid'], check=True)
     ret.check_returncode()
 
+    self.patch_bm_abi()
+
+  def patch_bm_abi(self):
     # patch compiler config for benchmark API
     cheri_output = self.cmd.dependency_dir.home() / "cheri/output"
     compiler_path = cheri_output / "morello-sdk/bin" 
@@ -459,7 +462,7 @@ class CommandLine:
                              default = ['bdwgc'],
                              help=f"set of allocator libs to execute code against")
     self.parser.add_argument('-a', '--action', nargs='*',
-                             choices = ['toolchain', 'build', 'install', 'rinstall', 'rexec', 'plot'], 
+                             choices = ['toolchain', 'add-benchmark-abi', 'build', 'install', 'rinstall', 'rexec', 'plot'], 
                              default = ['build'], 
                              help=f"actions to execute. These may be combined together to perform a sequence of events")
     self.parser.add_argument('-r', '--remoteconnect', 
@@ -521,6 +524,10 @@ def build_dependencies(repo):
   repo.build_dependencies()
   return
 
+def patch_bmabi_cfg(repo):
+  repo.patch_bm_abi()
+  return
+
 def plot_result(repo):
   if 'bdwgc' in repo.cmd.libs:
     graphs_to_plot = (["gc-cycles","gc-time","total-time","rss-kb"] + pmc_events, ["gc-load"])
@@ -563,6 +570,8 @@ if __name__ == '__main__':
 
   if 'toolchain' in repo.cmd.args.action: 
     build_dependencies(repo)
+  if 'add-benchmark-abi' in repo.cmd.args.action: 
+    patch_bmabi_cfg(repo)
   if 'build' in repo.cmd.args.action: 
     build_suite(repo)
   if 'install' in repo.cmd.args.action: 
