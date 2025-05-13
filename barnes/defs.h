@@ -1,6 +1,6 @@
-#line 95 "./null_macros/c.m4.null"
+//#line 95 "./null_macros/c.m4.null"
 
-#line 1 "defs.H"
+//#line 3 "defs.H"
 /*************************************************************************/
 /*                                                                       */
 /*  Copyright (c) 1994 Stanford University                               */

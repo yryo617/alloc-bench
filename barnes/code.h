@@ -1,6 +1,6 @@
-#line 95 "./null_macros/c.m4.null"
+//#line 95 "./null_macros/c.m4.null"
 
-#line 1 "code.H"
+//#line 3 "code.H"
 /*************************************************************************/
 /*                                                                       */
 /*  Copyright (c) 1994 Stanford University                               */
@@ -147,7 +147,7 @@ global struct local_memory Local[MAX_PROC];
 
 // functions:
 void inputdate();
-void initoutpu();
+void initoutput();
 
 void startrun(void);
 void tab_init();

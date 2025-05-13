@@ -1,6 +1,6 @@
-#line 95 "./null_macros/c.m4.null"
+//#line 95 "./null_macros/c.m4.null"
 
-#line 1 "code.C"
+//#line 3 "code.C"
 /*************************************************************************/
 /*                                                                       */
 /*  Copyright (c) 1994 Stanford University                               */
@@ -140,9 +140,9 @@ static void signal_gc()
 #endif
 
 #if !defined(BENCHLIB)
-int main(int argc, string argv[])
-// int argc;
-// string argv[];
+int main(int argc, string argv[]) 
+// int argc; 
+// // string argv[];
 #else 
 int bench_main(int argc, string argv[])
 #endif
@@ -162,8 +162,6 @@ int bench_main(int argc, string argv[])
 	break;
      }
    }
-   ANLinit();
-   initparam(argv, defv);
 
 #ifdef BDWGC
     GC_INIT();
@@ -174,6 +172,13 @@ int bench_main(int argc, string argv[])
         printf("[%s:%u] | GC-notify callback already set\n", __FUNCTION__, __LINE__);
     }
 #endif
+   ANLinit();
+   initparam(argv, defv);
+
+   startrun();
+   initoutput();
+   tab_init();
+
 
 
    Global->tracktime = 0;

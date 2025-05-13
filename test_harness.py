@@ -18,12 +18,12 @@ lib_category = { 'bdwgc' : ('gc', 'libgc.so') ,
 num_proc = 4
 
 run_bench = [
- 'binary_tree.elf', 
- 'richards.elf', 
- 'espresso.elf largest.espresso', 
- 'barnes.elf < input',
- 'cfrac.elf 17545186520507317056371138836327483792789528',
- 'random_mixed_alloc.elf',
+# 'binary_tree.elf', 
+# 'richards.elf', 
+# 'espresso.elf largest.espresso', 
+# 'barnes.elf < input',
+# 'cfrac.elf 17545186520507317056371138836327483792789528',
+# 'random_mixed_alloc.elf',
  'small_fixed_alloc.elf',
 ]
 
@@ -177,7 +177,10 @@ class Build:
       else: 
           env_libpath = ""
     else:
-      env_libpath = f'LD_64_LIBRARY_PATH' if self.cmd.arch == "hybrid" else f'LD_LIBRARY_PATH'
+      env_var = { "hybrid": "LD_64", 
+                  "purecap": "LD", 
+                  "benchmarkabi": "LD_64CB"}
+      env_libpath = f"{env_var[self.cmd.arch]}_LIBRARY_PATH"
       env_libpath += f'=$(pwd) '
 
     _outfile = pathlib.Path(f'{self.cmd.out_data_dir}/{self.cmd.args.output}')
@@ -189,8 +192,8 @@ class Build:
 
     # Ensure hybrid version is executed first
     # to normalise purecap version against hybrid
-    if self.cmd.arch == "purecap" and "hybrid" not in results:
-      sys.exit("Could not find hybrid results. Execute hybrid results before purecap")
+    if self.cmd.arch in ["purecap"," benchmarkabi"] and "hybrid" not in results:
+      sys.exit("Could not find hybrid results. Execute hybrid results before purecap and benchmarkabi")
 
 
     for _bm in run_bench:
