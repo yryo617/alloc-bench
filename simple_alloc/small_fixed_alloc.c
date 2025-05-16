@@ -21,7 +21,7 @@ static void signal_gc()
 
 
 
-#define TOTAL_ITERATIONS 32 * 1024
+#define TOTAL_ITERATIONS (8 * 1024 * 1024)
 
 #if !defined(BENCHLIB)
 int main(int argc , char *argv[])
@@ -30,7 +30,7 @@ int bench_main(int argc , char *argv[])
 #endif
 {
   int i;
-  int iter_total = 16 * 1024;
+  int iter_total = TOTAL_ITERATIONS;
 
   #ifdef BDWGC
   GC_INIT();
