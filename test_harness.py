@@ -18,12 +18,12 @@ lib_category = { 'bdwgc' : ('gc', 'libgc.so') ,
 num_proc = 4
 
 run_bench = [
-# 'binary_tree.elf', 
-# 'richards.elf', 
-# 'espresso.elf largest.espresso', 
-# 'barnes.elf < input',
-# 'cfrac.elf 17545186520507317056371138836327483792789528',
-# 'random_mixed_alloc.elf',
+ 'binary_tree.elf', 
+ 'richards.elf', 
+ 'espresso.elf largest.espresso', 
+ 'barnes.elf < input',
+ 'cfrac.elf 17545186520507317056371138836327483792789528',
+ 'random_mixed_alloc.elf',
  'small_fixed_alloc.elf',
 ]
 
