@@ -115,7 +115,11 @@ def gen_bunched_bar_loc(obj_json, bw=0.5, sw=0.5, offset=0.5, strip_zero=False):
 
 def gen_barchart(data, separate, strip_zero, conf_interval):
   tick_lbl, tick_x, bar_x = gen_bunched_bar_loc(data, bw=0.5, sw=0.5, offset=0.5, strip_zero=strip_zero)
-
+  
+  purecap_key     = "purecap"
+  hybrid_key      = "hybrid"
+  benchmarkbi_key = "benchmarkabi"
+  
   if separate == None: 
     _fig, _subplots = plt.subplots(nrows=1, ncols=2, sharex=False)
   else: 
@@ -124,31 +128,45 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
 
     purecap_measure, purecap_err = ([], [])
     hybrid_measure, hybrid_err = ([], [])
-    for _bm in data["purecap"].keys(): 
-      hybrid_measure += [data["hybrid"][_bm][separate]]
+    benchmarkabi_measure, benchmarkabi_err = ([],[])
+    print(f"data keys:{data.keys()}")
+    for _bm in data[purecap_key].keys(): 
+      hybrid_measure += [data[hybrid_key][_bm][separate]]
       if 'normalised' not in separate and separate != 'gc-load': 
-        mean = st.mean(data["hybrid"][_bm][f'raw-{separate}'])
-        std_dev = st.stdev(data["hybrid"][_bm][f'raw-{separate}'])
-        confidence = zval[conf_interval] * std_dev / math.sqrt(len(data["hybrid"][_bm][f'raw-{separate}']))
+        mean = st.mean(data[hybrid_key][_bm][f'raw-{separate}'])
+        std_dev = st.stdev(data[hybrid_key][_bm][f'raw-{separate}'])
+        confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[hybrid_key][_bm][f'raw-{separate}']))
         hybrid_err += [confidence]
 
-      purecap_measure += [data["purecap"][_bm][separate]]
+      purecap_measure += [data[purecap_key][_bm][separate]]
       if 'normalised' not in separate and separate != 'gc-load': 
-        mean = st.mean(data["purecap"][_bm][f'raw-{separate}'])
-        std_dev = st.stdev(data["purecap"][_bm][f'raw-{separate}'])
-        confidence = zval[conf_interval] * std_dev / math.sqrt(len(data["purecap"][_bm][f'raw-{separate}']))
+        mean = st.mean(data[purecap_key][_bm][f'raw-{separate}'])
+        std_dev = st.stdev(data[purecap_key][_bm][f'raw-{separate}'])
+        confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[purecap_key][_bm][f'raw-{separate}']))
         purecap_err += [confidence]
-
+      
+      if benchmarkbi_key in data.keys():
+        benchmarkabi_measure += [data[benchmarkbi_key][_bm][separate]]
+        if 'normalised' not in separate and separate != 'gc-load':
+          mean = st.mean(data[benchmarkbi_key][_bm][f'raw-{separate}'])
+          std_dev = st.stdev(data[benchmarkbi_key][_bm][f'raw-{separate}'])
+          confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[benchmarkbi_key][_bm][f'raw-{separate}']))
+          benchmarkabi_err += [confidence]
+        
     if 'normalised' not in separate and separate != 'gc-load': 
       _subplot.bar( bar_x[0] , hybrid_measure, label='morello-hybrid', color='r', \
                     width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
       _subplot.bar( bar_x[1] , purecap_measure , label='morello-purecap', color='g', \
                     width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
+      _subplot.bar( bar_x[1] , benchmarkabi_measure, label='morello-benchmark ABI', color='g', \
+                    width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
     else:
       _subplot.bar( bar_x[0] , hybrid_measure \
                    , label='morello-hybrid', color='r', width=0.5)
       _subplot.bar( bar_x[1] , purecap_measure \
                    , label='morello-purecap', color='g', width=0.5)
+      _subplot.bar( bar_x[2] , benchmarkabi_measure \
+                    , label='morello-benchmark ABI', color='b', width=0.5)
 
     if separate.startswith('normalised'):
       start_idx = len("normalised-")
@@ -160,7 +178,7 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
 
     _subplot.grid(True)
 
-    _subplot.set_xticks(tick_x, tick_lbl , rotation=45.0, y=-0.13, wrap=True)
+    _subplot.set_xticks(tick_x, tick_lbl , rotation=22.5, ha='right', rotation_mode='anchor', wrap=True)
     # _subplot.set_xticklabels( tick_lbl , rotation=-45.0, wrap=True)
     _subplot.legend(loc=0,ncol=2, fontsize='small')
 
@@ -178,10 +196,10 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
   #   "_top":0.0,
   #   "_hspace":0.0}
   adjust = [
-    0.14,#left
-    None, #right
-    0.25, #bottom
-    0.92, #top
+    0.13,#left
+    0.98, #right
+    0.18, #bottom
+    0.94, #top
     None #hspace
     ]
   if separate_files : 
