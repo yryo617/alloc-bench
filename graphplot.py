@@ -81,14 +81,16 @@ m_arch_colors = { "hybrid" : "red",
 def render(outfile, adjust=None):
     if adjust != None :
         _left, _right, _bottom, _top, _hspace = adjust
+        print(f"render() adjust:{adjust}")
+        print(f"render() _left:{_left}, _right:{_right}, _bottom:{_bottom},_top:{_top},_hspace:{_hspace}")
         plt.subplots_adjust(left=_left,right=_right,bottom=_bottom,top=_top,hspace=_hspace)
 
     _suffix = outfile.suffix.lstrip(".")
     assert _suffix.lstrip(".") in out_formats, f"invalid output file ({outfile})format {_suffix.lstrip('.')}. " \
                                                               f"acceptable formats -> {out_formats}"
-
+    
     plt.draw()
-    plt.pause(1)
+    plt.pause(0.5)
     #input("<Press Enter to continue>")
     plt.savefig(f"{outfile}",format="pdf")
     plt.close()
@@ -158,8 +160,8 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
 
     _subplot.grid(True)
 
-    _subplot.set_xticks(tick_x)
-    _subplot.set_xticklabels( tick_lbl , rotation=0.0)
+    _subplot.set_xticks(tick_x, tick_lbl , rotation=45.0, y=-0.13, wrap=True)
+    # _subplot.set_xticklabels( tick_lbl , rotation=-45.0, wrap=True)
     _subplot.legend(loc=0,ncol=2, fontsize='small')
 
 
@@ -170,19 +172,30 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
   result_data = None
   with open(json_file, "r") as fd:
     result_data = json.load(fd)
-
+  # adjust = {"_left" : 0.0,
+  #   "_right": 0.0,
+  #   "_bottom" : -0.2,
+  #   "_top":0.0,
+  #   "_hspace":0.0}
+  adjust = [
+    0.14,#left
+    None, #right
+    0.25, #bottom
+    0.92, #top
+    None #hspace
+    ]
   if separate_files : 
     std_event_list, misc_event_list = events_set
     for _event in std_event_list:
       gen_barchart(result_data, _event, False, conf_interval)
-      render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}")
+      render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}",adjust)
 
       gen_barchart(result_data, f"normalised-{_event}", False, conf_interval)
-      render(out_file.parent.resolve()/ f"{out_file.stem}_normalised-{_event}{out_file.suffix}")
+      render(out_file.parent.resolve()/ f"{out_file.stem}_normalised-{_event}{out_file.suffix}",adjust)
 
     for _event in misc_event_list:
       gen_barchart(result_data, _event, False, conf_interval)
-      render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}")
+      render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}",adjust)
 
     #gen_barchart(result_data, "gc-time", False)
     #render(out_file.parent.resolve()/ f"{out_file.stem}_gc-time{out_file.suffix}")
@@ -329,7 +342,7 @@ class Combined_Graphs:
       _subplot[idx_i].grid(True)
       _subplot[idx_i].axvline(vline_barpos, 0,1, linestyle="--", color='k')
       _subplot[idx_i].set_xticks(tick_x)
-      _subplot[idx_i].set_xticklabels( tick_lbl , rotation=0.0, fontsize="x-large")
+      _subplot[idx_i].set_xticklabels( tick_lbl , rotation=0.0, fontsize="x-large", wrap=True)
       _subplot[idx_i].set_ylabel("Normalised (vs hybrid) purecap metrics", fontsize="medium")
       _subplot[idx_i].set_ylim([None, math.ceil(max_ylim + max_norm_err)])
       _subplot[idx_i].legend(loc='upper left',ncol=2, fontsize='x-large')
@@ -384,7 +397,7 @@ class Combined_Graphs:
 
     _subplot.grid(True)
     _subplot.set_xticks(tick_x)
-    _subplot.set_xticklabels( tick_lbl , rotation=0.0, fontsize="x-large")
+    _subplot.set_xticklabels( tick_lbl , rotation=45.0, fontsize="x-large", wrap=True)
     _subplot.set_ylabel("Normalised (vs hybrid) purecap allocator metrics", fontsize="large")
     _subplot.set_ylim([None, math.ceil(max_ylim + max_norm_err)])
     _subplot.legend(loc='upper left',ncol=2, fontsize='x-large')
@@ -519,7 +532,7 @@ class GeoMean_Allocators:
                    label=event, color=m_arch_colors["purecap"], width=0.5)
     _subplot.grid(True)
     _subplot.set_xticks(tick_x)
-    _subplot.set_xticklabels( tick_lbl , rotation=0.0, fontsize="medium")
+    _subplot.set_xticklabels( tick_lbl , rotation=0.0, fontsize="medium", wrap=True)
     _subplot.set_ylabel("Normalised (vs jemalloc) allocated time taken", fontsize="large")
     _subplot.legend(loc=0,ncol=2, fontsize='large')
                         
