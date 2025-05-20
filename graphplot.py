@@ -158,7 +158,7 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
                     width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
       _subplot.bar( bar_x[1] , purecap_measure , label='morello-purecap', color='g', \
                     width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
-      _subplot.bar( bar_x[1] , benchmarkabi_measure, label='morello-benchmark ABI', color='g', \
+      _subplot.bar( bar_x[2] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
                     width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
     else:
       _subplot.bar( bar_x[0] , hybrid_measure \
