@@ -73,7 +73,8 @@ color_grid = { "total-time" : "cadetblue",
                } 
 
 m_arch_colors = { "hybrid" : "red", 
-                 "purecap" : "green"
+                 "purecap" : "green",
+                 "benchmarkabi" : "blue"
                 } 
 
 
@@ -196,7 +197,89 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
     # _subplot.set_xticklabels( tick_lbl , rotation=-45.0, wrap=True)
     _subplot.legend(loc=0,ncol=2, fontsize='small')
 
+# TODO: aggregate normalised parameters, plot all architectures
+def gen_barchart_per_benchmark(data, separate, strip_zero, conf_interval):
+  tick_lbl, tick_x, bar_x = gen_bunched_bar_loc(data, bw=0.5, sw=0.5, offset=0.5, strip_zero=strip_zero)
+  
+  purecap_key     = "purecap"
+  hybrid_key      = "hybrid"
+  benchmarkbi_key = "benchmarkabi"
+  
+  if separate == None: 
+    _fig, _subplots = plt.subplots(nrows=1, ncols=2, sharex=False)
+  else: 
+    _fig, _subplot = plt.subplots(nrows=1, ncols=1, sharex=False)
+    _fig.tight_layout()
 
+    purecap_measure, purecap_err = ([], [])
+    hybrid_measure, hybrid_err = ([], [])
+    benchmarkabi_measure, benchmarkabi_err = ([],[])
+    print(f"data keys:{data.keys()}")
+    for _bm in data[purecap_key].keys(): 
+      hybrid_measure += [data[hybrid_key][_bm][separate]]
+      if 'normalised' not in separate and separate != 'gc-load': 
+        mean = st.mean(data[hybrid_key][_bm][f'raw-{separate}'])
+        std_dev = st.stdev(data[hybrid_key][_bm][f'raw-{separate}'])
+        confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[hybrid_key][_bm][f'raw-{separate}']))
+        hybrid_err += [confidence]
+      elif 'normalised' in separate and separate != 'gc-load':
+        pass # TODO: implement normalised error bars
+
+      purecap_measure += [data[purecap_key][_bm][separate]]
+      if 'normalised' not in separate and separate != 'gc-load': 
+        mean = st.mean(data[purecap_key][_bm][f'raw-{separate}'])
+        std_dev = st.stdev(data[purecap_key][_bm][f'raw-{separate}'])
+        confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[purecap_key][_bm][f'raw-{separate}']))
+        purecap_err += [confidence]
+      elif 'normalised' in separate and separate != 'gc-load':
+        pass # TODO: implement normalised error bars
+
+      if benchmarkbi_key in data.keys():
+        benchmarkabi_measure += [data[benchmarkbi_key][_bm][separate]]
+        if 'normalised' not in separate and separate != 'gc-load':
+          mean = st.mean(data[benchmarkbi_key][_bm][f'raw-{separate}'])
+          std_dev = st.stdev(data[benchmarkbi_key][_bm][f'raw-{separate}'])
+          confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[benchmarkbi_key][_bm][f'raw-{separate}']))
+          benchmarkabi_err += [confidence]
+        elif 'normalised' in separate and separate != 'gc-load':
+          pass # TODO: implement normalised error bars
+
+    if 'normalised' not in separate and separate != 'gc-load': 
+      _subplot.bar( bar_x[0] , hybrid_measure, label='morello-hybrid', color='r', \
+                    width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
+      _subplot.bar( bar_x[1] , purecap_measure , label='morello-purecap', color='g', \
+                    width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
+      _subplot.bar( bar_x[2] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
+                    width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
+    elif 'normalised' in separate and separate != 'gc-load':
+      # TODO: Actually implement normalised error bars
+      _subplot.bar( bar_x[0] , hybrid_measure \
+                   , label='morello-hybrid', color='r', width=0.5)
+      _subplot.bar( bar_x[1] , purecap_measure \
+                   , label='morello-purecap', color='g', width=0.5)
+      _subplot.bar( bar_x[2] , benchmarkabi_measure \
+                    , label='morello-benchmark ABI', color='b', width=0.5)
+    else:
+      _subplot.bar( bar_x[0] , hybrid_measure \
+                   , label='morello-hybrid', color='r', width=0.5)
+      _subplot.bar( bar_x[1] , purecap_measure \
+                   , label='morello-purecap', color='g', width=0.5)
+      _subplot.bar( bar_x[2] , benchmarkabi_measure \
+                    , label='morello-benchmark ABI', color='b', width=0.5)
+
+    if separate.startswith('normalised'):
+      start_idx = len("normalised-")
+      _subplot.set_ylabel( f"Normalised {y_labels[separate[start_idx:]][1]}" )
+      _subplot.set_title( f"Normalised {y_labels[separate[start_idx:]][0]}" )
+    else :
+      _subplot.set_ylabel( y_labels[separate][1] )
+      _subplot.set_title(y_labels[separate][0] )
+
+    _subplot.grid(True)
+
+    _subplot.set_xticks(tick_x, tick_lbl , rotation=22.5, ha='right', rotation_mode='anchor', wrap=True)
+    # _subplot.set_xticklabels( tick_lbl , rotation=-45.0, wrap=True)
+    _subplot.legend(loc=0,ncol=2, fontsize='small')
 
 def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interval=95):
   json_file = pathlib.Path(json_file)  # Ensure conversion to pathlib
@@ -216,10 +299,12 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
     0.94, #top
     None #hspace
     ]
+  print(f"{result_data}")
+  exit() #debug
   if separate_files : 
     std_event_list, misc_event_list = events_set
     print(f"events:{events_set}")
-    exit() #debug
+    # exit() #debug
     for _event in std_event_list:
       gen_barchart(result_data, _event, False, conf_interval)
       render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}",adjust)
