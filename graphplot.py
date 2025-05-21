@@ -137,6 +137,8 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
         std_dev = st.stdev(data[hybrid_key][_bm][f'raw-{separate}'])
         confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[hybrid_key][_bm][f'raw-{separate}']))
         hybrid_err += [confidence]
+      elif 'normalised' in separate and separate != 'gc-load':
+        pass # TODO: implement normalised error bars
 
       purecap_measure += [data[purecap_key][_bm][separate]]
       if 'normalised' not in separate and separate != 'gc-load': 
@@ -144,7 +146,9 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
         std_dev = st.stdev(data[purecap_key][_bm][f'raw-{separate}'])
         confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[purecap_key][_bm][f'raw-{separate}']))
         purecap_err += [confidence]
-      
+      elif 'normalised' in separate and separate != 'gc-load':
+        pass # TODO: implement normalised error bars
+
       if benchmarkbi_key in data.keys():
         benchmarkabi_measure += [data[benchmarkbi_key][_bm][separate]]
         if 'normalised' not in separate and separate != 'gc-load':
@@ -152,7 +156,9 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
           std_dev = st.stdev(data[benchmarkbi_key][_bm][f'raw-{separate}'])
           confidence = zval[conf_interval] * std_dev / math.sqrt(len(data[benchmarkbi_key][_bm][f'raw-{separate}']))
           benchmarkabi_err += [confidence]
-        
+        elif 'normalised' in separate and separate != 'gc-load':
+          pass # TODO: implement normalised error bars
+
     if 'normalised' not in separate and separate != 'gc-load': 
       _subplot.bar( bar_x[0] , hybrid_measure, label='morello-hybrid', color='r', \
                     width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
@@ -160,6 +166,14 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
                     width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
       _subplot.bar( bar_x[2] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
                     width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
+    elif 'normalised' in separate and separate != 'gc-load':
+      # TODO: Actually implement normalised error bars
+      _subplot.bar( bar_x[0] , hybrid_measure \
+                   , label='morello-hybrid', color='r', width=0.5)
+      _subplot.bar( bar_x[1] , purecap_measure \
+                   , label='morello-purecap', color='g', width=0.5)
+      _subplot.bar( bar_x[2] , benchmarkabi_measure \
+                    , label='morello-benchmark ABI', color='b', width=0.5)
     else:
       _subplot.bar( bar_x[0] , hybrid_measure \
                    , label='morello-hybrid', color='r', width=0.5)
@@ -204,6 +218,8 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
     ]
   if separate_files : 
     std_event_list, misc_event_list = events_set
+    print(f"events:{events_set}")
+    exit() #debug
     for _event in std_event_list:
       gen_barchart(result_data, _event, False, conf_interval)
       render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}",adjust)
