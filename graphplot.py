@@ -193,7 +193,7 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
       _subplot.set_title(y_labels[separate][0] )
 
     _subplot.grid(True)
-
+    _subplot.set_ylim(bottom=0)
     _subplot.set_xticks(tick_x, tick_lbl , rotation=22.5, ha='right', rotation_mode='anchor', wrap=True)
     # _subplot.set_xticklabels( tick_lbl , rotation=-45.0, wrap=True)
     _subplot.legend(loc=0,ncol=2, fontsize='small')
@@ -215,7 +215,7 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
   tick_pos = []
   tick_labels_  = []
   for metric in metrics:
-      tick_labels_.append(f"{y_labels.get(metric)[0]}-{y_labels.get(metric)[1]}")
+      tick_labels_.append(f"{y_labels.get(metric)[0]} ({y_labels.get(metric)[1]})")
   bin_start = 0.5 #offset
   bw = 0.5
   sw = 0.5
@@ -243,9 +243,15 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
   print(f"data keys:{data.keys()}")
   _bm = benchmark
   for metric_ in metrics:
-    print(f"Metric: {metric_}")
+    print(f"\nMetric: {metric_}",end=", ")
     # tick_labels_.append(metric_)
     if f"{norm_label}{metric_}" not in data[hybrid_key][_bm]:
+      hybrid_measure+=[0]
+      hybrid_err += [0]
+      purecap_measure+=[0]
+      purecap_err+=[0]
+      benchmarkabi_measure+=[0]
+      benchmarkabi_err+=[0]
       continue
     hybrid_measure += [data[hybrid_key][_bm][f"{norm_label}{metric_}"]]
     if metric_!="gc-load":
@@ -254,6 +260,7 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
       sum_ = sum(data[hybrid_key][_bm][f'raw-{metric_}'])
       confidence = (zval[conf_interval] * std_dev / math.sqrt(len(data[hybrid_key][_bm][f'raw-{metric_}'])))/sum_ # normalise confidence
       hybrid_err += [confidence]
+      print(f"hybrid:{hybrid_measure}:{hybrid_err}",end=", ")
     else:
       hybrid_err += [0]
     purecap_measure += [data[purecap_key][_bm][f"{norm_label}{metric_}"]]
@@ -263,9 +270,10 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
       sum_ = sum(data[purecap_key][_bm][f'raw-{metric_}'])
       confidence = (zval[conf_interval] * std_dev / math.sqrt(len(data[purecap_key][_bm][f'raw-{metric_}'])))/sum_
       purecap_err += [confidence]
+      print(f"purecap:{purecap_measure}:{purecap_err}",end=", ")
     else:
       purecap_err += [0]
-
+      
     if benchmarkbi_key in data.keys():
       benchmarkabi_measure += [data[benchmarkbi_key][_bm][f"{norm_label}{metric_}"]]
       if metric_!="gc-load":
@@ -274,26 +282,31 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
         sum_ = sum(data[benchmarkbi_key][_bm][f'raw-{metric_}'])
         confidence = (zval[conf_interval] * std_dev / math.sqrt(len(data[benchmarkbi_key][_bm][f'raw-{metric_}'])))/sum_
         benchmarkabi_err += [confidence]
+        print(f"b_abi:{benchmarkabi_measure}:{benchmarkabi_err}",end=", ")
       else:
         benchmarkabi_err += [0]
+  print(f"\n debug: hybrid:{len(hybrid_measure)}-{hybrid_measure}, purecap:{len(purecap_measure)}-{purecap_measure}, benchmark:{len(benchmarkabi_measure)}-{benchmarkabi_measure}")
+  print(f"bar_x[0]:{len(bar_x[0])}-{bar_x[0]}")
+  print(f"bar_x[1]:{len(bar_x[1])}-{bar_x[1]}")
+  print(f"bar_x[2]:{len(bar_x[2])}-{bar_x[2]}")
     # if 'normalised' not in metric_ and metric_ != 'gc-load': 
-    _subplot.bar( bar_x[0][base_x_pos] , hybrid_measure, label='morello-hybrid', color='r', \
-                  width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
-    _subplot.bar( bar_x[1][base_x_pos] , purecap_measure , label='morello-purecap', color='g', \
-                  width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
-    _subplot.bar( bar_x[2][base_x_pos] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
-                  width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
-    base_x_pos += 1
-
-
-  start_idx = len("normalised-")
-  _subplot.set_ylabel( f"Normalised" )
+  _subplot.bar( bar_x[0], hybrid_measure, label='morello-hybrid', color='r', \
+                width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
+  _subplot.bar( bar_x[1], purecap_measure , label='morello-purecap', color='g', \
+                width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
+  _subplot.bar( bar_x[2] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
+                width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
+  base_x_pos += 1
+    
+    
+  _subplot.set_ylabel( "Normalised" )
   _subplot.set_title( f"Normalised {benchmark}" )
   _subplot.grid(True) 
   print(f"tick_pos len: {len(tick_pos)}")
   print(f"tick_labels_ len: {len(tick_labels_)}")
   print(f"{tick_labels_}")
-  _subplot.set_xticks(tick_pos, tick_labels_ , rotation=22.5, ha='right', rotation_mode='anchor', wrap=True)
+  _subplot.set_ylim(bottom=0)
+  _subplot.set_xticks(tick_pos, tick_labels_ , rotation=45, ha='right', rotation_mode='anchor', wrap=True, fontsize=8)
   # _subplot.set_xticklabels( tick_lbl , rotation=-45.0, wrap=True)
   _subplot.legend(loc=0,ncol=2, fontsize='small')
 
@@ -315,7 +328,8 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
     0.94, #top
     None #hspace
     ]
-  print(f"{result_data}")
+  # print(f"{json.dumps(result_data)}")
+  # exit()
   benchmark_list = result_data['purecap'].keys()
   print(f"{benchmark_list}")
   gen_bunched_bar_loc(result_data)
@@ -324,10 +338,7 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
     std_event_list, misc_event_list = events_set
     print(f"events:{events_set}")
     # exit() #debug
-    for benchmark_ in benchmark_list:
-      gen_barchart_per_benchmark(result_data,benchmark_,False, conf_interval)
-      render(out_file.parent.resolve()/ f"{out_file.stem}_normalised-{benchmark_}{out_file.suffix}",adjust)
-      exit()
+    
     for _event in std_event_list:
       gen_barchart(result_data, _event, False, conf_interval)
       render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}",adjust)
@@ -338,8 +349,17 @@ def plot(plot_type, json_file, out_file, events_set, separate_files, conf_interv
     for _event in misc_event_list:
       gen_barchart(result_data, _event, False, conf_interval)
       render(out_file.parent.resolve()/ f"{out_file.stem}_{_event}{out_file.suffix}",adjust)
-
-
+    adjust = [
+    0.13,#left
+    0.98, #right
+    0.22, #bottom
+    0.94, #top
+    None #hspace
+    ]
+    for benchmark_ in benchmark_list:
+      gen_barchart_per_benchmark(result_data,benchmark_,False, conf_interval)
+      render(out_file.parent.resolve()/ f"{out_file.stem}_normalised-{benchmark_}{out_file.suffix}",adjust)
+  
     
     #gen_barchart(result_data, "gc-time", False)
     #render(out_file.parent.resolve()/ f"{out_file.stem}_gc-time{out_file.suffix}")
