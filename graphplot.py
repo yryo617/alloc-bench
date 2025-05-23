@@ -246,6 +246,7 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
     print(f"\nMetric: {metric_}",end=", ")
     # tick_labels_.append(metric_)
     if f"{norm_label}{metric_}" not in data[hybrid_key][_bm]:
+      print("\n*** skipping")
       hybrid_measure+=[0]
       hybrid_err += [0]
       purecap_measure+=[0]

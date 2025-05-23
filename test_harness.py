@@ -286,6 +286,7 @@ class Build:
 
         self.normal(results, bm_p, "gc-cycles") 
         self.normal(results, bm_p, "gc-time") 
+        self.normal(results, bm_p, "gc-load")
         self.normal(results, bm_p, "rss-kb") 
 
         for _event in pmc_events:
