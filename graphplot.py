@@ -38,12 +38,8 @@ zval = np.array([ 0.01253347, 0.02506891, 0.03760829, 0.05015358, 0.06270678,
                   1.69539771, 1.75068607, 1.81191067, 1.88079361, 1.95996398,
                   2.05374891, 2.17009038, 2.32634787, 2.5758293,] )
 
-y_labels = { "BUS_ACCESS" : ("Bus-Access", "events"),
-             "BUS_ACCESS_RD_CTAG" : ("Bus-Access-Ctag", "events"), 
-             "CPU_CYCLES" : ("CPU-cycles", "cycles"), 
-             "INST_RETIRED": ("Instructions retired", "instrs"), 
+y_labels = { "L1I_CACHE": ("L1-I-cache", "accesses"),
              "L1D_CACHE": ("L1-D-cache", "accesses"),
-             "L1I_CACHE": ("L1-I-cache", "accesses"),
              "L2D_CACHE": ("L2-D-cache", "accesses"),
              "L1I_CACHE_REFILL": ("L1-I-cache", "misses"), 
              "L1D_CACHE_REFILL": ("L1-D-cache", "misses"), 
@@ -51,11 +47,15 @@ y_labels = { "BUS_ACCESS" : ("Bus-Access", "events"),
              "LL_CACHE_RD": ("LL-cache Read", "accesses"),
              "LL_CACHE_MISS_RD": ("LL-cache Read Misses", "misses"),
              "MEM_ACCESS": ("Memory access", "accesses"),
-             "total-time": ("Total Time", "milli-sec"),
-             "rss-kb": ("RSS", "KB"),
+             "BUS_ACCESS" : ("Bus-Access", "events"),
+             "BUS_ACCESS_RD_CTAG" : ("Bus-Access-Ctag", "events"), 
+             "CPU_CYCLES" : ("CPU-cycles", "cycles"), 
              "gc-cycles": ("GC cycles", "cycles"),
-             "gc-load": ("GC load", "GC runtime ratio"),
+             "INST_RETIRED": ("Instructions retired", "instrs"),
              "gc-time": ("GC time", "milli-sec"), 
+             "total-time": ("Total Time", "milli-sec"),
+             "gc-load": ("GC load", "GC runtime ratio"),
+             "rss-kb": ("RSS", "KB")
 }
 
 color_grid = { "total-time" : "cadetblue", 
@@ -164,24 +164,24 @@ def gen_barchart(data, separate, strip_zero, conf_interval):
     if 'normalised' not in separate and separate != 'gc-load': 
       _subplot.bar( bar_x[0] , hybrid_measure, label='morello-hybrid', color='r', \
                     width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
-      _subplot.bar( bar_x[1] , purecap_measure , label='morello-purecap', color='g', \
+      _subplot.bar( bar_x[2] , purecap_measure , label='morello-purecap', color='g', \
                     width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
-      _subplot.bar( bar_x[2] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
+      _subplot.bar( bar_x[1] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
                     width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
     elif 'normalised' in separate and separate != 'gc-load':
       # TODO: Actually implement normalised error bars
       _subplot.bar( bar_x[0] , hybrid_measure \
                    , label='morello-hybrid', color='r', width=0.5)
-      _subplot.bar( bar_x[1] , purecap_measure \
+      _subplot.bar( bar_x[2] , purecap_measure \
                    , label='morello-purecap', color='g', width=0.5)
-      _subplot.bar( bar_x[2] , benchmarkabi_measure \
+      _subplot.bar( bar_x[1] , benchmarkabi_measure \
                     , label='morello-benchmark ABI', color='b', width=0.5)
     else:
       _subplot.bar( bar_x[0] , hybrid_measure \
                    , label='morello-hybrid', color='r', width=0.5)
-      _subplot.bar( bar_x[1] , purecap_measure \
+      _subplot.bar( bar_x[2] , purecap_measure \
                    , label='morello-purecap', color='g', width=0.5)
-      _subplot.bar( bar_x[2] , benchmarkabi_measure \
+      _subplot.bar( bar_x[1] , benchmarkabi_measure \
                     , label='morello-benchmark ABI', color='b', width=0.5)
 
     if separate.startswith('normalised'):
@@ -209,7 +209,10 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
   benchmarkbi_key = "benchmarkabi"
   print(data.keys())
   # benchmarks = data[purecap_key].keys()
-  metrics = list(set(y_labels.keys()) & set(data[purecap_key][benchmark].keys()))
+  metrics = []
+  for key in y_labels.keys():
+    if key in data[purecap_key][benchmark].keys():
+      metrics.append(key)
   norm_label = "normalised-"
   bar_pos = [ [] for _i in data.keys()]
   tick_pos = []
@@ -242,6 +245,8 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
   # tick_labels_ = []
   print(f"data keys:{data.keys()}")
   _bm = benchmark
+  print(f"metrics:{metrics}")
+  # exit()
   for metric_ in metrics:
     print(f"\nMetric: {metric_}",end=", ")
     # tick_labels_.append(metric_)
@@ -293,9 +298,9 @@ def gen_barchart_per_benchmark(data, benchmark, strip_zero, conf_interval):
     # if 'normalised' not in metric_ and metric_ != 'gc-load': 
   _subplot.bar( bar_x[0], hybrid_measure, label='morello-hybrid', color='r', \
                 width=0.5, yerr=hybrid_err, capstyle='projecting', capsize=4 )
-  _subplot.bar( bar_x[1], purecap_measure , label='morello-purecap', color='g', \
+  _subplot.bar( bar_x[2], purecap_measure , label='morello-purecap', color='g', \
                 width=0.5, yerr=purecap_err, capstyle='projecting', capsize=4 )
-  _subplot.bar( bar_x[2] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
+  _subplot.bar( bar_x[1] , benchmarkabi_measure, label='morello-benchmark ABI', color='b', \
                 width=0.5, yerr=benchmarkabi_err, capstyle='projecting', capsize=4 )
   base_x_pos += 1
     
