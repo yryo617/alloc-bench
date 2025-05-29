@@ -197,7 +197,9 @@ class Build:
 
 
     for _bm in run_bench:
+      print(f"**** Running: {_bm} ****")
       self.__execute( env_libpath, f'{_bm}', self.cmd.args.repeat, self.cmd.out_data_dir, results)
+      print(f"**** Done running {_bm} ****")
     else : 
       with open(_outfile, "w") as fd:
         json.dump(results, fd, indent=2,sort_keys=True)
@@ -232,6 +234,7 @@ class Build:
     bm_p = pathlib.Path(bm.split()[0]).stem
 
     for _idx in range(1, self.cmd.args.repeat+1):
+      print(f"{_idx}...",end="")
       # Execute benchmark on remote server 
       _tmpfile_time = pathlib.Path(f'{host_data_dir}/{self.cmd.args.output}.time')
       _tmpfile_time.unlink(True)
@@ -292,7 +295,7 @@ class Build:
         for _event in pmc_events:
           results[self.cmd.arch][bm_p][_event] = _gmean(np.array(results[self.cmd.arch][bm_p][f"raw-{_event}"]))
           self.normal(results, bm_p, _event) 
-        
+        print(f"\n total_time:{results[self.cmd.arch][bm_p]["total-time"]}, gc-time:{results[self.cmd.arch][bm_p]["gc-time"]}")
 
   def normal(self, results, bm,  event):
     if results["hybrid"][bm][event] > 0.0 :
