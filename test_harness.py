@@ -295,7 +295,7 @@ class Build:
         for _event in pmc_events:
           results[self.cmd.arch][bm_p][_event] = _gmean(np.array(results[self.cmd.arch][bm_p][f"raw-{_event}"]))
           self.normal(results, bm_p, _event) 
-        print(f"\n total_time:{results[self.cmd.arch][bm_p]["total-time"]}, gc-time:{results[self.cmd.arch][bm_p]["gc-time"]}")
+        print(f"\n total_time:{results[self.cmd.arch][bm_p][\"total-time\"]}, gc-time:{results[self.cmd.arch][bm_p][\"gc-time\"]}")
 
   def normal(self, results, bm,  event):
     if results["hybrid"][bm][event] > 0.0 :
