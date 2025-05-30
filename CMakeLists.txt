@@ -48,7 +48,7 @@ if (${gclib} STREQUAL bdwgc)
     include(ExternalProject)
     ExternalProject_Add(project_bdwgc
             GIT_REPOSITORY https://github.com/djichthys/bdwgc.git
-            GIT_TAG cheri/apr2025-bmabi
+            GIT_TAG cheri/may2025-bmabi
             CMAKE_ARGS ${bdwgc_cmake_args}
             PREFIX ${bdwgc_build_prefix})
 
