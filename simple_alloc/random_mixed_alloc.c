@@ -22,7 +22,7 @@
 
 
 #define INIT_SEED 42
-#define TOTAL_ITERATIONS (32 * 1024)
+#define TOTAL_ITERATIONS (8 * 1024 * 1024)
 
 #if defined(BDWGC)
 unsigned int GC_count = 0;
