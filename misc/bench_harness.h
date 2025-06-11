@@ -9,7 +9,7 @@ typedef struct __BM_HARNESS_DATA__
 {
   char *bm; 
   unsigned int gc_cycles;
-  unsigned int gc_time_ms;
+  unsigned long gc_time_ms;
 } BM_Harness; 
 
 int bmlog(BM_Harness *);

@@ -20,7 +20,7 @@ int bmlog(BM_Harness *bmdata)
   fprintf(fp, "{\n");
   fprintf(fp, "  \"%s\" : \"%s\" ,\n", "bm", bmdata->bm );
   fprintf(fp, "  \"%s\" : %u ,\n", "gc_cycles", bmdata->gc_cycles );
-  fprintf(fp, "  \"%s\" : %u\n", "gc_time_ms", bmdata->gc_time_ms );
+  fprintf(fp, "  \"%s\" : %lu\n", "gc_time_ms", bmdata->gc_time_ms );
   fprintf(fp, "}\n");
 
   fclose(fp);
